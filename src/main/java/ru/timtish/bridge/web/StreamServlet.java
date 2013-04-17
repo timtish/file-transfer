@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.box.StreamsBox;
@@ -39,7 +40,7 @@ public class StreamServlet extends HttpServlet {
 		URL source = new URL(url);
 		URLConnection connection = source.openConnection();
 		String key = UUID.randomUUID().toString();
-		AbstractStream stream = new AbstractStream(connection.getInputStream(), connection.getContentLength(), url, request.getRemoteUser(), description);
+		AbstractStream stream = new AbstractStream(connection.getInputStream(), connection.getContentLength(), BoxUtil.safeFileName(url), request.getRemoteUser(), description);
 		stream.setRepeatable(stream.getSize() < 1024 * 1024);
 
 		StreamsBox.getInstance().addStreams(key, stream);

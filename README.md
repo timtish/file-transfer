@@ -15,5 +15,7 @@ Bridge for upload/download files from one client to other clients use different 
 
 - [x] GET HTTP request
 - [x] webdav directory and look inside uploaded zip archives
+- [ ] GET HTTP as zip archive
+- [ ] send to email
 - [ ] multimedia streams
 

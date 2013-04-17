@@ -21,8 +21,10 @@ public class AutoClosableInputStream extends InputStream {
 	public int read() throws IOException {
 		if (readed == null) {
 			readed = 0L;
+			System.out.println("> start read from " + size);
 		}
 		if (in == null) {
+			System.out.println("> read empty " + size);
 			return -1;
 		}
 
@@ -31,6 +33,7 @@ public class AutoClosableInputStream extends InputStream {
 			readed++;
 		}
 		if (b < 0 || (size != null && readed >= size)) {
+			System.out.println("> stop read from " + readed + "/" + size);
 			close();
 		}
 		return b;

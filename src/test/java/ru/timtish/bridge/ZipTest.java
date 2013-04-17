@@ -8,7 +8,7 @@ import org.junit.Test;
 import ru.timtish.bridge.box.BoxEntity;
 import ru.timtish.bridge.pipeline.converter.Zip;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -19,6 +19,8 @@ public class ZipTest {
 	public void getZipFiles() throws IOException {
 		InputStream zip = ClassLoader.getSystemResource("test.zip").openStream();
 		try {
+
+			if (System.getProperty("sun.zip.encoding") == null) System.setProperty("sun.zip.encoding", "CP866");
 
 			List<BoxEntity> files = Zip.getFilesTree(zip, "");
 			assertEquals(files.size(), 2);

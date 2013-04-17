@@ -32,6 +32,10 @@
     <servlet-class>ru.timtish.bridge.web.SimpleFormServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>simpleFileServlet</servlet-name>
+    <servlet-class>ru.timtish.bridge.web.SimpleFileServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>streamServlet</servlet-name>
     <servlet-class>ru.timtish.bridge.web.StreamServlet</servlet-class>
   </servlet>
@@ -65,6 +69,11 @@
   <servlet-mapping>
     <servlet-name>simpleFormServlet</servlet-name>
     <url-pattern>/put_txt</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>simpleFileServlet</servlet-name>
+    <url-pattern>/put_file</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

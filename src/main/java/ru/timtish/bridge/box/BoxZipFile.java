@@ -20,12 +20,14 @@ public class BoxZipFile implements BoxEntity {
 	private String zipStreamKey;
 	private String zipFilePath;
 	private String name;
+	private Long size;
 
 	transient private AbstractStream in;
 
-	public BoxZipFile(String zipStreamKey, String zipFilePath, BoxEntity parent) {
+	public BoxZipFile(String zipStreamKey, String zipFilePath, Long size, BoxEntity parent) {
 		this.zipStreamKey = zipStreamKey;
 		this.parent = parent;
+		this.size = size;
 		setZipFilePath(zipFilePath);
 	}
 
@@ -53,7 +55,7 @@ public class BoxZipFile implements BoxEntity {
 	}
 
 	public Long getSize() {
-		return getInputStream().getSize();
+		return size;
 	}
 
 	public AbstractStream getInputStream() {

@@ -10,8 +10,16 @@
     <title>Files box</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="main.css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
 </head>
 <body>
+<button value="Выделить" onclick=""></button>
+<button value="Загрузить архивом" onclick=""></button>
+<button value="Отправить почтой" onclick=""></button>
+
+<a href="index.jsp">Добавить файл</a>
+<a href="webdav">Подключить как сетевой диск</a>
+
 <table>
     <caption>Box <%=request.getRemoteUser()%></caption>
     <tr><th>number</th><th>name</th><th>description</th><th>loaded</th></tr>
@@ -31,6 +39,7 @@
         String key = isFile ? ((BoxFile) stream).getKey() : stream.getName();
         AbstractStream in = isFile ? ((BoxFile) stream).getInputStream() : null;
         %><tr>
+            <td><input type="checkbox" id="<%=stream.getName()%>" /></td>
             <td><%=i++%></td>
             <td><a href="<%=isFile ? "get?key=" + key : stream.getName() + "/" %>" <%if(isFile && StreamStatus.CLOSED.equals(in.getStatus())){%>style="color: gray;text-decoration: line-through;"<%}else if(newKeys.contains(key)){%>style="color: green;"<%}else{%>style="color: blue;"<%}%>><%=stream.getName()%></a></td>
             <td><%=stream.getDescription() == null ? "" : stream.getDescription()%></td>
@@ -39,8 +48,6 @@
     }
 %>
 </table>
-
-<a href="index.jsp">add file</a>
 
 </body>
 </html>

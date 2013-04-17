@@ -22,6 +22,11 @@ import ru.timtish.bridge.pipeline.cache.RepeatableInputStream;
  */
 public class Zip {
 
+	static {
+		// fix for windows archives
+		if (System.getProperty("sun.zip.encoding") == null) System.setProperty("sun.zip.encoding", "CP866");
+	}
+
 	public static void addToZip(AbstractStream in, ZipOutputStream stream) throws IOException {
 		ZipEntry zipEntity = new ZipEntry(in.getName());
 		if (in.getSize() != null) {
@@ -50,7 +55,7 @@ public class Zip {
 				if (zipFile.isDirectory()) {
 					entity = new BoxDirectory(fileName, new Date(zipFile.getTime()), new ArrayList<BoxEntity>(), subfolder);
 				} else {
-					entity = new BoxZipFile(zipStreamKey, zipFile.getName(), null);
+					entity = new BoxZipFile(zipStreamKey, zipFile.getName(), zipFile.getSize(), null);
 				}
 
 				if (subfolder != null) {

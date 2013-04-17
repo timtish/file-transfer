@@ -33,6 +33,7 @@ public class CachedInMemoryInputStream extends AutoClosableInputStream implement
 			}
 			if (out != null && (b < 0 || (getSize() != null && getReaded() >= getSize()))) {
 				cache = out.toByteArray();
+				System.out.println("out. " + out.size() + " = " +  out.toByteArray().length + " " + cache.length);
 				out.close();
 				out = null;
 			}

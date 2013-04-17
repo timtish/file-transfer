@@ -12,3 +12,42 @@ form {
 input {
     margin: 4px;
 }
+
+/* upload forms */
+
+#dropZone
+{
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    background-color: #eee;
+    width: 250px;
+    padding: 50px 0;
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+    margin: 50px auto;
+}
+
+#mf.hover
+{
+    border-color: #aaa;
+    background-color: #ddd;
+}
+
+#mfdd.error
+{
+    border-color: #f00;
+    background-color: #faa;
+}
+#mfdd.warning
+{
+    display: block;
+    background-color: #ff8c00;
+    color: black;
+    font-style: italic;
+}
+.warning a
+{
+    color: blue;
+    font-weight: bold;
+}

@@ -16,7 +16,7 @@
 Приём (two-click):
 + text
 + image
-- zip as directory
++ zip as directory
 - selected as zip
 - selected to email
 - audio

@@ -20,6 +20,7 @@ public class SimpleFileServlet extends javax.servlet.http.HttpServlet {
 		String key = UUID.randomUUID().toString();
 		AbstractStream stream = new AbstractStream(request.getInputStream(), request.getContentLength(),
 				BoxUtil.safeFileName(request.getHeader("X-FILE-NAME")), request.getRemoteUser(), null);
+		stream.setContentType(request.getContentType());
 		stream.setRepeatable(stream.getSize() < 1024 * 1024);
 		new CacheInitializer(stream).run();
 		StreamsBox.getInstance().addStreams(key, stream);

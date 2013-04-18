@@ -28,6 +28,7 @@ public class SimpleFormServlet extends javax.servlet.http.HttpServlet {
 			AbstractStream stream = new AbstractStream(new ByteArrayInputStream(buffer), buffer.length,
 					BoxUtil.safeFileName(request.getParameter("name")), request.getRemoteUser(), request.getParameter("description"));
 			stream.setRepeatable(buffer.length < 1024 * 1024);
+			stream.setContentType("text/plan");
 			StreamsBox.getInstance().addStreams(key, stream);
 			new Thread(new CacheInitializer(stream)).start();
 

@@ -51,3 +51,22 @@ input {
     color: blue;
     font-weight: bold;
 }
+
+.type-img {
+    background-color: #9acd32;
+}
+.type-bin {
+    background-color: #f5f5dc;
+}
+.type-exe {
+    background-color: #f0e68c;
+}
+.type-txt {
+    background-color: #ffe4c4;
+}
+.type-doc {
+    background-color: #87cefa;
+}
+.type-zip {
+    background-color: #f4a460;
+}

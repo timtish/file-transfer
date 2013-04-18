@@ -33,4 +33,14 @@ public class BoxUtil {
 		return fileName;
 	}
 
+	public static String contentTypeIcon(String contentType) {
+		if (contentType == null) return "bin";
+		if (contentType.startsWith("text")) return "txt";
+		if (contentType.startsWith("image")) return "img";
+		if (contentType.equals("application/zip")) return "zip";
+		if (contentType.startsWith("application/x-")) return "exe";
+		if (contentType.startsWith("application")) return "doc";
+		return "bin";
+	}
+
 }

@@ -57,6 +57,7 @@ public class MultiPartServlet extends javax.servlet.http.HttpServlet {
 					AbstractStream stream = new AbstractStream(file.getInputStream(), file.getSize(),
 							BoxUtil.safeFileName(file.getName()), request.getRemoteUser(), description);
 					stream.setRepeatable(stream.getSize() < 1024 * 1024);
+					stream.setContentType(file.getContentType());
 					StreamsBox.getInstance().addStreams(key, stream);
 					if (file.isInMemory()) {
 						new Thread(new CacheInitializer(stream)).start();

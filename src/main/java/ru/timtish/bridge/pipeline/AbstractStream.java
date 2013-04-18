@@ -25,6 +25,8 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 
 	String description;
 
+	String contentType;
+
 	AutoClosableInputStream in;
 
 	// кеш всего потока в памяти
@@ -122,6 +124,14 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 
 	public String getOwner() {
 		return owner;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 
 	public String getName() {

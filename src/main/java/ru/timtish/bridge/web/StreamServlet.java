@@ -42,6 +42,7 @@ public class StreamServlet extends HttpServlet {
 		String key = UUID.randomUUID().toString();
 		AbstractStream stream = new AbstractStream(connection.getInputStream(), connection.getContentLength(), BoxUtil.safeFileName(url), request.getRemoteUser(), description);
 		stream.setRepeatable(stream.getSize() < 1024 * 1024);
+		stream.setContentType(connection.getContentType());
 
 		StreamsBox.getInstance().addStreams(key, stream);
 		new Thread(new CacheInitializer(stream)).start();

@@ -22,7 +22,7 @@
 
 <table>
     <caption>Box <%=request.getRemoteUser()%></caption>
-    <tr><th>number</th><th>name</th><th>description</th><th>loaded</th></tr>
+    <tr><th></th><th>number</th><th>name</th><th>description</th><th>loaded</th></tr>
 <%
     StreamsBox box = StreamsBox.getInstance();
     String user = request.getRemoteUser();
@@ -40,7 +40,7 @@
         AbstractStream in = isFile ? ((BoxFile) stream).getInputStream() : null;
         %><tr>
             <td><input type="checkbox" id="<%=stream.getName()%>" /></td>
-            <td><%=i++%></td>
+            <td class="<%=in != null ? "type-" + BoxUtil.contentTypeIcon(in.getContentType()) : ""%>" title="<%=in != null ? in.getContentType() : ""%>"><%=i++%></td>
             <td><a href="<%=isFile ? "get?key=" + key : stream.getName() + "/" %>" <%if(isFile && StreamStatus.CLOSED.equals(in.getStatus())){%>style="color: gray;text-decoration: line-through;"<%}else if(newKeys.contains(key)){%>style="color: green;"<%}else{%>style="color: blue;"<%}%>><%=stream.getName()%></a></td>
             <td><%=stream.getDescription() == null ? "" : stream.getDescription()%></td>
             <td><%=(isFile && stream.getSize() != null && stream.getSize() > 0) ? in.getReaded() * 100 / stream.getSize() + " %" : "?"%></td>

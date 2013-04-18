@@ -182,7 +182,7 @@ public class DirectoryContext extends BaseDirContext {
 		} else if (entity instanceof BoxZipFile) {
 			BoxZipFile file = (BoxZipFile) entity;
 			try {
-				return new Resource(Zip.unzip(file.getInputStream().createCopy(), file.getZipFilePath())); // lazy unzip
+				return new Resource(Zip.unzip(file.getInputStream().createCopy(), file.getZipFilePath())); // todo: lazy unzip
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null; // todo

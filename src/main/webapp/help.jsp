@@ -4,6 +4,13 @@
 </head>
 <body>
 <pre>
+
+Этот сервис НЕ для хранения документов, только для убодства передачи.
+Доступен интреактивный веб интерфейс и запускаемый на Вашем устройстве(компьютере) клиент,
+позволяющий показывать коллегам Ваши файлы без кеширования их на сервере или, для вывода изображений сразу на телевизор.
+
+Доступ к _распределённым_ данным. (NAS)
+
 Передача (two-click):
 + text
 + load file
@@ -12,6 +19,9 @@
 - link local directory
 - link ftp directory
 - webcam/photocam bridge
+? move folder or link to webdav?
+- синхронизация контактов (списком или одним, на почту или смской)
+- перекидывание своего каталога в другой
 
 Приём (two-click):
 + text
@@ -23,9 +33,13 @@
 - video
 + webDav
 - ftp
+- синхронизация (с двумя панелями и стрелочками)
+
+- поиск в пределах сети
 
 Интерфейс:
 - one click interface
+- touch/drag&drop interface
 + upload form
 + user directory browser (с индикатором загрузки)
 + load link
@@ -33,7 +47,7 @@
 + drag & drop files
 
 upload -> file/url/ftp
-file -> zip -> download/to email/to new shared box
+file -> zip -> download/to email/to new shared box/as short link
 select -> zip -> download/to email/to (new) shared box/to ftp/to mms/to fotolab
 
 Редактирование (three-click):

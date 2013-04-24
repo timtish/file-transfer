@@ -31,6 +31,8 @@ public interface BoxEntity {
 
 	List<BoxEntity> getChilds();
 
+	BoxEntity getChild(String path);
+
 	BoxEntity getParent();
 
 	boolean isContainer();

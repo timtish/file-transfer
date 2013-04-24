@@ -12,17 +12,19 @@ public class StreamsBox {
 
 	private static final Logger LOG = Logger.getLogger(StreamsBox.class.getName());
 
-	private static final StreamsBox INSTANCE = new StreamsBox();
+	private static final StreamsBox INSTANCE = new StreamsBox(new BoxDirectory("root", new Date(), new ArrayList<BoxEntity>(), null));
 
 	public static StreamsBox getInstance() {
 		return INSTANCE;
 	}
 
+	protected StreamsBox(BoxDirectory root) {
+		this.root = root;
+	}
+
 	private Map<String, AbstractStream> streams = new HashMap<String, AbstractStream>();
 
-	private List<BoxDirectory> dirs = new ArrayList<BoxDirectory>();
-
-	private BoxDirectory defaultDir = new BoxDirectory("root", new Date(), new ArrayList<BoxEntity>(), null);
+	private BoxDirectory root;
 
 	public AbstractStream getStream(String key) {
 		return streams.get(key);
@@ -32,7 +34,7 @@ public class StreamsBox {
 		LOG.fine("stream " + stream.getName() + " linked");
 		this.streams.put(key, stream);
 		// todo: check security
-		defaultDir.getChilds().add(new BoxFile(key, defaultDir));
+		root.getChilds().add(new BoxFile(key, root));
 	}
 
 	public void release(String key) {
@@ -40,7 +42,7 @@ public class StreamsBox {
 		if (stream != null) {
 			stream.clear();
 			streams.remove(key);
-			// todo: defaultDir.getChilds().remove()
+			// todo: root.getChilds().remove()
 			LOG.fine("stream " + stream.getName() + " removed");
 		}
 	}
@@ -49,9 +51,7 @@ public class StreamsBox {
 		return streams.keySet();
 	}
 
-	public BoxEntity getBoxEntity(String user, String path) {
-		// todo: check security, find user directory
-		return BoxUtil.findEntity(defaultDir, path);
+	public BoxDirectory getRoot() {
+		return root;
 	}
-
 }

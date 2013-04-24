@@ -25,19 +25,23 @@
 
   <servlet>
     <servlet-name>multiPartServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.MultiPartServlet</servlet-class>
+    <servlet-class>ru.timtish.bridge.web.MultiPartImportServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>simpleFormServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.SimpleFormServlet</servlet-class>
+    <servlet-class>ru.timtish.bridge.web.UrlEncodedImportServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>simpleFileServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.SimpleFileServlet</servlet-class>
+    <servlet-name>simpleStreamServlet</servlet-name>
+    <servlet-class>ru.timtish.bridge.web.SimpleStreamServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>streamServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.StreamServlet</servlet-class>
+    <servlet-name>urlStreamServlet</servlet-name>
+    <servlet-class>ru.timtish.bridge.web.UrlImportServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>zipExportServlet</servlet-name>
+    <servlet-class>ru.timtish.bridge.web.ZipExportServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -61,6 +65,8 @@
     </init-param>
   </servlet>
 
+  <!-- in connectors -->
+
   <servlet-mapping>
     <servlet-name>multiPartServlet</servlet-name>
     <url-pattern>/put_mp</url-pattern>
@@ -72,31 +78,39 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>simpleFileServlet</servlet-name>
+    <servlet-name>simpleStreamServlet</servlet-name>
     <url-pattern>/put_file</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>streamServlet</servlet-name>
+    <servlet-name>urlStreamServlet</servlet-name>
     <url-pattern>/put_st</url-pattern>
   </servlet-mapping>
 
+  <!-- out connectors -->
+
   <servlet-mapping>
-    <servlet-name>multiPartServlet</servlet-name>
+    <servlet-name>simpleStreamServlet</servlet-name>
     <url-pattern>/get</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>streamServlet</servlet-name>
-    <url-pattern>/big</url-pattern>
+    <servlet-name>zipExportServlet</servlet-name>
+    <url-pattern>/zip</url-pattern>
   </servlet-mapping>
-
-
 
   <servlet-mapping>
     <servlet-name>webdav</servlet-name>
     <url-pattern>/webdav/*</url-pattern>
   </servlet-mapping>
+
+  <!-- test stream -->
+
+  <servlet-mapping>
+    <servlet-name>urlStreamServlet</servlet-name>
+    <url-pattern>/big</url-pattern>
+  </servlet-mapping>
+
 
   <welcome-file-list>
     <welcome-file>/index.jsp</welcome-file>

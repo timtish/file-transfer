@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.pipeline.AbstractStream;
@@ -32,6 +33,7 @@ public class CacheTest {
 	}
 
 	@Test
+	@Ignore
 	public void testRepeatableFileCache() {
 		long size = 10 * 1024 * 1024;
 		AbstractStream stream = new AbstractStream(new TestInputStream(size), size, "testStream", "user", "description");
@@ -71,6 +73,7 @@ public class CacheTest {
 	}
 
 	@Test
+	@Ignore
 	public void testNonRepeatableBigStream() {
 		long size = 10 * 1024 * 1024;
 		AbstractStream stream = new AbstractStream(new TestInputStream(size), size, "testStream", "user", "description");

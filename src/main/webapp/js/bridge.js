@@ -11,7 +11,7 @@ var namespace = function(){
 
 namespace("ru.timtish.bridge");
 
-ru.timtish.bridge.updateBrowser = function updateBrowser(div) {
+ru.timtish.bridge.updateBrowser = function (div) {
     var ieVersion = navigator.appVersion.match(/MSIE ([\d.]+)/);
     if (ieVersion) {
         div.html('Мы развиваемся, интернет развивается, технологии развиваются и браузеры развиваются...<br/><a href="http://windows.microsoft.com/ru-ru/internet-explorer/download-ie" target="_blank">Обновите</a> Ваш браузер до последней версии (требуется перезагрузка) или <a href="http://www.whatbrowser.org" target="_blank">попробуйте</a> новый браузер!');
@@ -22,3 +22,16 @@ ru.timtish.bridge.updateBrowser = function updateBrowser(div) {
     }
 }
 
+ru.timtish.bridge.alert = function (str) {
+    alert(str);
+}
+
+ru.timtish.bridge.loadFilesAsZip = function(streamKeyList) {
+    $.fileDownload("zip", {
+        httpMethod: "POST",
+        data: {
+            keys: streamKeyList,
+            box: "" /* todo: set box id or zip name */
+        }
+    })
+}

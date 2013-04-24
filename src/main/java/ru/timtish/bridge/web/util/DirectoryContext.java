@@ -1,4 +1,4 @@
-package ru.timtish.bridge.web;
+package ru.timtish.bridge.web.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class DirectoryContext extends BaseDirContext {
 			return result;
 		}
 
-		BoxEntity entity = BoxUtil.findEntity(dir, name);
+		BoxEntity entity = dir.getChild(name);
 		if (entity != null) {
 			ResourceAttributes result = new ResourceAttributes();
 			result.setName(entity.getName());
@@ -157,7 +157,7 @@ public class DirectoryContext extends BaseDirContext {
 
 		if (name.endsWith("/desktop.ini")) return new Resource(DESKTOP_INI);
 
-		BoxEntity entity = BoxUtil.findEntity(dir, name);
+		BoxEntity entity = dir.getChild(name);
 		if (entity != null) {
 			result = doLookup(entity);
 			if (result instanceof DirectoryContext) {
@@ -196,7 +196,7 @@ public class DirectoryContext extends BaseDirContext {
 	protected List<NamingEntry> doListBindings(String name) throws NamingException {
 		List<NamingEntry> list = new ArrayList<NamingEntry>();
 
-		BoxEntity file = BoxUtil.findEntity(dir, name);
+		BoxEntity file = dir.getChild(name);
 		if (file != null) {
 			for (BoxEntity child : file.getChilds()) {
 				if (child.isContainer()) {

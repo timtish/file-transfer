@@ -1,29 +1,19 @@
 package ru.timtish.bridge.box;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
 public class BoxUtil {
 
-	public static BoxEntity findEntity(BoxEntity dir, String fileName) {
+	private static final Map<String, BoxDirectory> dirs = new HashMap<String, BoxDirectory>();
 
-		if (fileName == null) return dir;
-		if (fileName.startsWith("/")) fileName = fileName.substring(1);
-		if (fileName.endsWith("/")) fileName = fileName.substring(0, fileName.length() - 1);
-		if (fileName.isEmpty()) return dir;
-
-		for (BoxEntity entity : dir.getChilds()) {
-			System.out.println("= " + dir.getName() + " + " + entity.getName() + " ? " + fileName);
-			if (fileName.equals(entity.getName())) return entity;
-			// todo: @BlackMagicDetected
-			//if (entity instanceof BoxZipFile && (dir.getName() + "/" + fileName).equals(entity.getName())) return entity;
-			//if (entity instanceof BoxZipFile && fileName.equals("/" + dir.getName() + "/" + entity.getName())) return entity;
-			if (entity.isContainer() && fileName.startsWith(entity.getName() + "/")) {
-				return findEntity(entity, fileName.substring(entity.getName().length() + 1));
-			}
-		}
-
-		return null;
+	public static BoxEntity getBoxEntity(String user, String box, String path) {
+		// todo: check security, find user directory
+		BoxDirectory dir = findById(box);
+		return  dir == null ? null : dir.getChild(path);
 	}
 
 	public static String safeFileName(String fileName) {
@@ -41,6 +31,14 @@ public class BoxUtil {
 		if (contentType.startsWith("application/x-")) return "exe";
 		if (contentType.startsWith("application")) return "doc";
 		return "bin";
+	}
+
+	public static BoxDirectory findById(String boxId) {
+		return dirs.get(boxId);
+	}
+
+	public static void addBox(String id, BoxDirectory dir) {
+		dirs.put(id, dir);
 	}
 
 }

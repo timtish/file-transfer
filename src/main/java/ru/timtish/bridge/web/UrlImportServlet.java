@@ -15,13 +15,14 @@ import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.box.StreamsBox;
+import ru.timtish.bridge.web.util.UrlConstants;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public class StreamServlet extends HttpServlet {
+public class UrlImportServlet extends HttpServlet {
 
-	private static final Logger LOG = Logger.getLogger(StreamServlet.class.getName());
+	private static final Logger LOG = Logger.getLogger(UrlImportServlet.class.getName());
 
 	private static final String PARAM_URL = "url";
 	private static final String PARAM_DESCRIPTION = "description";

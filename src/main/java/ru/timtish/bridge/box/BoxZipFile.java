@@ -96,6 +96,11 @@ public class BoxZipFile implements BoxEntity {
 		if (name != null && name.contains("/")) name = name.substring(name.lastIndexOf("/") + 1);
 	}
 
+	@Override
+	public BoxEntity getChild(String path) {
+		return new BoxZipFile(zipStreamKey, zipFilePath + "/" + path, null, parent);
+	}
+
 	public Date getDate() {
 		return getInputStream().getCreatedDate();
 	}

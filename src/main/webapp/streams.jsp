@@ -4,7 +4,8 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="java.util.HashSet" %>
 <%@ page import="java.util.Arrays" %>
-<%@ page import="ru.timtish.bridge.web.UrlConstants" %>
+<%@ page import="ru.timtish.bridge.web.util.UrlConstants" %>
+<%@ page import="ru.timtish.bridge.box.BoxUtil" %>
 <html>
 <head>
     <title>Streams</title>

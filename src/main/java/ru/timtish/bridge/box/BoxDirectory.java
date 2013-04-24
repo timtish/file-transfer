@@ -81,6 +81,26 @@ public class BoxDirectory implements BoxEntity {
 		stream.closeEntry();
 	}
 
+	public BoxEntity getChild(String fileName) {
+
+		System.out.println("findEntity: " + fileName + " in " + getName());
+
+		if (fileName == null) return this;
+		if (fileName.startsWith("/")) fileName = fileName.substring(1);
+		if (fileName.endsWith("/")) fileName = fileName.substring(0, fileName.length() - 1);
+		if (fileName.isEmpty()) return this;
+
+		for (BoxEntity entity : getChilds()) {
+			if (fileName.equals(entity.getName())) return entity;
+			if (entity.isContainer() && fileName.startsWith(entity.getName() + "/")) {
+				return entity.getChild(fileName.substring(entity.getName().length() + 1));
+			}
+		}
+
+		return null;
+	}
+
+
 	public List<BoxEntity> getChilds() {
 		return childs;
 	}

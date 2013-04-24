@@ -90,6 +90,11 @@ public class BoxFile implements BoxEntity {
 	}
 
 	@Override
+	public BoxEntity getChild(String path) {
+		return null;
+	}
+
+	@Override
 	public boolean isContainer() {
 		init();
 		return isContainer;

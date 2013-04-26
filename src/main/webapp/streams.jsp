@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ page import="ru.timtish.bridge.box.StreamsBox" %>
 <%@ page import="ru.timtish.bridge.pipeline.AbstractStream" %>

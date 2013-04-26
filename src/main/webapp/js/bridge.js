@@ -26,12 +26,14 @@ ru.timtish.bridge.alert = function (str) {
     alert(str);
 }
 
-ru.timtish.bridge.loadFilesAsZip = function(streamKeyList) {
+ru.timtish.bridge.loadFilesAsZip = function loadFilesAsZip(streamKeyList) {
+    /*ru.timtish.bridge.location = window.location.toString();
+    ru.timtish.bridge.location = ru.timtish.bridge.location.substring(0, ru.timtish.bridge.location.lastIndexOf('/'));*/
     $.fileDownload("zip", {
         httpMethod: "POST",
         data: {
-            keys: streamKeyList,
-            box: "" /* todo: set box id or zip name */
+            keys: streamKeyList.join(','),
+            box: "box.zip" /* todo: set box id or zip name */
         }
     })
 }

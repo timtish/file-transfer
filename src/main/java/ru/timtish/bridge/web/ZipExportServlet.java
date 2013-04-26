@@ -24,13 +24,17 @@ import ru.timtish.bridge.web.util.UrlConstants;
 public class ZipExportServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<String> streamKeyList = new ArrayList<String>();
-
-		streamKeyList.addAll(Arrays.asList(request.getParameterValues(UrlConstants.PARAM_KEYS + "[]")));
+		List<String> streamKeyList;
+		String keys = request.getParameter(UrlConstants.PARAM_KEYS);
+		if (keys != null) {
+			streamKeyList = Arrays.asList(keys.split(","));
+		} else {
+			streamKeyList = new ArrayList<String>();
+		}
 
 		// todo: check permissions
 
-		String zipName = "box.zip";
+		String zipName = request.getParameter("box");
 
 		response.setContentType("application/zip");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(zipName, "UTF-8") + "\"");

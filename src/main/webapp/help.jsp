@@ -28,7 +28,7 @@
 + text
 + image
 + zip as directory
-- selected as zip
++ selected as zip
 - selected to email
 - audio
 - video

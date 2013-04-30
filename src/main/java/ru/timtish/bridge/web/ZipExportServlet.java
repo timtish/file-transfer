@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.web.util.UrlConstants;
@@ -22,6 +23,9 @@ import ru.timtish.bridge.web.util.UrlConstants;
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
 public class ZipExportServlet extends HttpServlet {
+
+	@Autowired
+	private StreamsBox streamsBox;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> streamKeyList;
@@ -43,7 +47,7 @@ public class ZipExportServlet extends HttpServlet {
 		ZipOutputStream zipStream = new ZipOutputStream(response.getOutputStream());
 		try {
 			for (String key : streamKeyList) {
-				AbstractStream stream = StreamsBox.getInstance().getStream(key);
+				AbstractStream stream = streamsBox.getStream(key);
 
 				if (stream == null) continue; // todo: show warning
 
@@ -55,7 +59,7 @@ public class ZipExportServlet extends HttpServlet {
 				stream.write(zipStream);
 
 				if (!stream.isRepeatable()) {
-					StreamsBox.getInstance().release(key);
+					streamsBox.release(key);
 				}
 			}
 		} finally {

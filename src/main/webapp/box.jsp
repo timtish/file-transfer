@@ -6,6 +6,7 @@
 <%@ page import="ru.timtish.bridge.web.util.UrlConstants" %>
 <%@ page import="ru.timtish.bridge.pipeline.AbstractStream" %>
 <%@ page import="ru.timtish.bridge.box.*" %>
+<%@ page import="org.apache.james.mailbox.store.streaming.AbstractFullContent" %>
 <html>
 <head>
     <title>Files box</title>
@@ -26,6 +27,8 @@
 <table>
     <caption>Box <%=request.getRemoteUser()%></caption>
     <tr><th></th><th>№</th><th>файл</th><th>комментарий</th><th>кеш</th></tr>
+    <jsp:useBean id="streamsBox" beanName="streamBox" type="ru.timtish.bridge.box.StreamsBox"/>
+    <!-- remove scriptlets -->
 <%
     String box = request.getParameter(UrlConstants.PARAM_BOX);
     String user = request.getRemoteUser();
@@ -37,7 +40,7 @@
     }
     int i = 1;
     BoxEntity dir = BoxUtil.getBoxEntity(user, box, path);
-    if (dir == null) dir = StreamsBox.getInstance().getRoot();
+    if (dir == null) dir = streamsBox.getRoot();
 
     for (BoxEntity stream : dir.getChilds()) {
         boolean isFile = stream instanceof BoxFile;

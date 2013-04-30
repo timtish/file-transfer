@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.pipeline.AbstractStream;
@@ -19,6 +20,9 @@ import ru.timtish.bridge.web.util.UrlConstants;
  */
 public class UrlEncodedImportServlet extends javax.servlet.http.HttpServlet {
 
+	@Autowired
+	private StreamsBox streamsBox;
+
 	private static final Logger LOG = Logger.getLogger(UrlEncodedImportServlet.class.getName());
 
 	protected void doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -26,11 +30,13 @@ public class UrlEncodedImportServlet extends javax.servlet.http.HttpServlet {
 		if (data != null) {
 			byte[] buffer = data.getBytes();
 			String key = UUID.randomUUID().toString();
-			AbstractStream stream = new AbstractStream(new ByteArrayInputStream(buffer), buffer.length,
-					BoxUtil.safeFileName(request.getParameter("name")), request.getRemoteUser(), request.getParameter("description"));
+			String name = request.getParameter("name");
+			if (name == null || name.trim().isEmpty()) name = "txt";
+			name = BoxUtil.safeFileName(name);
+			AbstractStream stream = new AbstractStream(new ByteArrayInputStream(buffer), buffer.length, name, request.getRemoteUser(), request.getParameter("description"));
 			stream.setRepeatable(buffer.length < 1024 * 1024);
 			stream.setContentType("text/plan");
-			StreamsBox.getInstance().addStreams(key, stream);
+			streamsBox.addStreams(key, stream);
 			new Thread(new CacheInitializer(stream)).start();
 
 			response.sendRedirect("box.jsp?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);

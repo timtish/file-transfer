@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.converter.Zip;
 
@@ -14,6 +15,9 @@ import ru.timtish.bridge.pipeline.converter.Zip;
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
 public class BoxFile implements BoxEntity {
+
+	@Autowired
+	private StreamsBox streamsBox;
 
 	private BoxEntity parent;
 
@@ -63,7 +67,7 @@ public class BoxFile implements BoxEntity {
 
 	public AbstractStream getInputStream() {
 		if (in == null) {
-			in = StreamsBox.getInstance().getStream(streamKey);
+			in = streamsBox.getStream(streamKey);
 		}
 		return in;
 	}

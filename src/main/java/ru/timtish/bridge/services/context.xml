@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                             http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                             http://www.springframework.org/schema/jdbc
+                             http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+                             http://www.springframework.org/schema/tx
+                             http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+                             http://www.springframework.org/schema/aop
+                             http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                             http://www.springframework.org/schema/context
+                             http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+  <context:component-scan base-package="ru.timtish.bridge" />
+
+  <bean id="mailserver" class="org.apache.james.JamesMailServer"/>
+
+  <bean id="pop3server"  class="org.apache.james.pop3server.netty.POP3Server" >
+    <property name="protocolHandlerChain" ref="pop3ProtocolHandlerChain"/>
+  </bean>
+
+  <bean id="pop3ProtocolHandlerChain" class="org.apache.james.socket.JamesProtocolHandlerChain">
+    <property name="coreHandlersPackage" value="org.apache.james.pop3server.core.CoreCmdHandlerLoader"/>
+  </bean>
+
+  <bean id="smtpserver" class="org.apache.james.smtpserver.netty.SMTPServer">
+    <property name="protocolHandlerChain" ref="smtpProtocolHandlerChain"/>
+  </bean>
+
+  <bean id="smtpProtocolHandlerChain" class="org.apache.james.socket.JamesProtocolHandlerChain">
+    <property name="coreHandlersPackage" value="org.apache.james.smtpserver.CoreCmdHandlerLoader"/>
+  </bean>
+
+  <bean class="ru.timtish.bridge.services.JamesBeanPostProcessor"/>
+
+  <bean id="dnsservice" class="org.apache.james.dnsservice.dnsjava.DNSJavaService" />
+
+  <bean id="domainlist" class="org.apache.james.domainlist.xml.XMLDomainList" />
+
+  <bean id="imapserver" class="org.apache.james.imapserver.netty.IMAPServer">
+    <property name="imapDecoder" ref="imapDecoder"/>
+    <property name="imapEncoder" ref="imapEncoder"/>
+  </bean>
+
+  <bean id="imapDecoderFactory" class="org.apache.james.imap.main.DefaultImapDecoderFactory"/>
+
+  <bean id="imapDecoder" factory-bean="imapDecoderFactory"  factory-method="buildImapDecoder"/>
+
+  <bean id="imapEncoderFactory" class="org.apache.james.imap.encode.main.DefaultImapEncoderFactory"/>
+
+  <bean id="imapEncoder" factory-bean="imapEncoderFactory"  factory-method="buildImapEncoder"/>
+
+  <bean id="instanceFactory" class="ru.timtish.bridge.services.SpringInstanceFactory"/>
+
+  <bean class="ru.timtish.bridge.services.SpringConfigurationProvider"/>
+
+  <bean id="filesystem" class="ru.timtish.bridge.services.SpringFileSystem" />
+
+<!--
+
+  <bean id="imapProcessor" class="org.apache.james.imap.processor.main.DefaultImapProcessorFactory" factory-method="createDefaultProcessor">
+    <constructor-arg index="0" ref="mailboxmanager"/>
+    <constructor-arg index="1" ref="subscriptionManager"/>
+  </bean>
+
+  <bean id="processormanagement" class="org.apache.james.mailetcontainer.lib.ProcessorManagement"/>
+
+  <bean id="usermanagement" class="org.apache.james.user.lib.UserManagement" />
+
+  <bean id="virtualusertablemanagement" class="org.apache.james.vut.lib.VirtualUserTableManagement" />
+
+  <bean id="domainlistmanagement" class="org.apache.james.domainlist.lib.DomainListManagement" />
+
+  <bean id="mailboxmanagermanagement" class="org.apache.james.adapter.mailbox.MailboxManagerManagement" />
+
+  <bean class="ru.timtish.bridge.services.CommonsConfigurableBeanPostProcessor">
+    <property name="configurationProvider" ref="configurationProvider" />
+    <property name="order" value="1" />
+  </bean>
+
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    <property name = "location" value="file://conf/database.properties"/>
+  </bean>
+
+  <bean class= "org.springframework.context.annotation.CommonAnnotationBeanPostProcessor">
+    <property name="order" value="3" />
+  </bean>
+
+  <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
+  <bean id="blobTransferPolicy" class="org.apache.james.queue.activemq.FileSystemBlobTransferPolicy">
+    <property name="defaultUploadUrl" value="file://var/store/activemq/blob-transfer"/>
+  </bean>
+
+  <bean id="mailProcessor" name="processorRoute" class="org.apache.james.mailetcontainer.camel.CamelMailProcessorList"/>
+
+  <bean id="spoolmanager" class="org.apache.james.transport.JamesSpoolManager"/>
+
+  <bean id="mailetcontext" class="org.apache.james.mailetcontainer.lib.JamesMailetContext"/>
+
+  <bean id="matcherloader" class="org.apache.james.mailetcontainer.lib.JamesMatcherLoader" />
+
+  <bean id="mailetloader" class="org.apache.james.mailetcontainer.lib.JamesMailetLoader" />
+
+
+  <bean id="remotemanager" class="org.apache.james.remotemanager.netty.RemoteManager" >
+    <property name="protocolHandlerChain" ref="remoteProtocolHandlerChain"/>
+  </bean>
+
+  <bean id="remoteProtocolHandlerChain" class="org.apache.james.socket.JamesProtocolHandlerChain">
+    <property name="coreHandlersPackage" value="org.apache.james.remotemanager.core.CoreCmdHandlerLoader"/>
+  </bean>
+
+
+  <bean id="lmtpserver" class="org.apache.james.lmtpserver.netty.LMTPServer">
+    <property name="protocolHandlerChain" ref="lmtpProtocolHandlerChain"/>
+  </bean>
+
+  <bean id="lmtpProtocolHandlerChain" class="org.apache.james.socket.JamesProtocolHandlerChain">
+    <property name="coreHandlersPackage" value="org.apache.james.lmtpserver.CoreCmdHandlerLoader"/>
+  </bean>
+
+  <bean id="fetchmail" class="org.apache.james.fetchmail.FetchScheduler" />
+
+  <bean id="mailstore" class="org.apache.james.mailstore.lib.JamesMailStore" />
+
+  <bean id="usersstore" class="org.apache.james.user.lib.JamesUsersStore" >
+    <property name="defaultRepository" value="LocalUsers"/>
+  </bean>
+
+  <bean id="localusersrepository" class="org.apache.james.user.lib.LocalUsersRepository" />
+
+  <bean id="virtualusertable" class="org.apache.james.vut.lib.JamesVirtualUserTable" />
+
+  <bean id="authenticator" class="org.apache.james.adapter.mailbox.store.UserRepositoryAuthenticator"/>
+
+  <bean id="sessionMapperFactory" class="org.apache.james.mailbox.jpa.JPAMailboxSessionMapperFactory">
+    <constructor-arg index="0" ref="entityManagerFactory"/>
+  </bean>
+
+  <bean id ="subscriptionManager" class="org.apache.james.mailbox.jpa.JPASubscriptionManager">
+    <constructor-arg index="0" ref="sessionMapperFactory"/>
+  </bean>
+
+  <bean id="mailboxmanager" class="org.apache.james.mailbox.jpa.openjpa.OpenJPAMailboxManager">
+    <constructor-arg index="0" ref="sessionMapperFactory"/>
+    <constructor-arg index="1" ref="authenticator"/>
+    <constructor-arg index="2" value="${openjpa.streaming}"/>
+  </bean>
+
+  <bean id="scheduler" class="java.util.concurrent.Executors" factory-method="newScheduledThreadPool">
+    <constructor-arg value="20"/>
+  </bean>
+
+  <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="${database.driverClassName}" />
+    <property name="url" value="${database.url}" />
+    <property name="username" value="${database.username}" />
+    <property name="password" value="${database.password}" />
+  </bean>
+
+  <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="dataSource" ref="datasource"/>
+    <property name="jpaVendorAdapter" ref="vendorAdapter"/>
+  </bean>
+
+  <bean id="vendorAdapter" class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
+    <property name="database" value="${vendorAdapter.database}"/>
+    &lt;!&ndash; set this to true for debugging purposes &ndash;&gt;
+    <property name="showSql" value="false"/>
+  </bean>
+-->
+
+</beans>

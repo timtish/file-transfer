@@ -3,19 +3,19 @@ package ru.timtish.bridge.box;
 import java.util.*;
 import java.util.logging.Logger;
 
+import org.springframework.stereotype.Component;
 import ru.timtish.bridge.pipeline.AbstractStream;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
+@Component("streamBox")
 public class StreamsBox {
 
 	private static final Logger LOG = Logger.getLogger(StreamsBox.class.getName());
 
-	private static final StreamsBox INSTANCE = new StreamsBox(new BoxDirectory("root", new Date(), new ArrayList<BoxEntity>(), null));
-
-	public static StreamsBox getInstance() {
-		return INSTANCE;
+	public StreamsBox() {
+		this(new BoxDirectory("root", new Date(), new ArrayList<BoxEntity>(), null));
 	}
 
 	protected StreamsBox(BoxDirectory root) {

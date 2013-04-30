@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.pipeline.AbstractStream;
@@ -29,6 +30,9 @@ public class UrlImportServlet extends HttpServlet {
 
 	private static final int BIG_LENGTH = 1 * 1024 * 1024;
 
+	@Autowired
+	private StreamsBox streamsBox;
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String url = request.getParameter(PARAM_URL);
@@ -45,7 +49,7 @@ public class UrlImportServlet extends HttpServlet {
 		stream.setRepeatable(stream.getSize() < 1024 * 1024);
 		stream.setContentType(connection.getContentType());
 
-		StreamsBox.getInstance().addStreams(key, stream);
+		streamsBox.addStreams(key, stream);
 		new Thread(new CacheInitializer(stream)).start();
 
 		response.sendRedirect("box.jsp?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);

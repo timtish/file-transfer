@@ -13,6 +13,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
@@ -23,6 +24,9 @@ import ru.timtish.bridge.web.util.UrlConstants;
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
 public class MultiPartImportServlet extends HttpServlet {
+
+	@Autowired
+	private StreamsBox streamsBox;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String newKeys = "";
@@ -61,7 +65,7 @@ public class MultiPartImportServlet extends HttpServlet {
 							BoxUtil.safeFileName(file.getName()), request.getRemoteUser(), description);
 					stream.setRepeatable(stream.getSize() < 1024 * 1024);
 					stream.setContentType(file.getContentType());
-					StreamsBox.getInstance().addStreams(key, stream);
+					streamsBox.addStreams(key, stream);
 					if (file.isInMemory()) {
 						new Thread(new CacheInitializer(stream)).start();
 					}

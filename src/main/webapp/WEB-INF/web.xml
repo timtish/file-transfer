@@ -23,6 +23,15 @@
     <url-pattern>*</url-pattern>
   </filter-mapping>
 
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:ru/timtish/bridge/services/context.xml</param-value>
+  </context-param>
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
   <servlet>
     <servlet-name>multiPartServlet</servlet-name>
     <servlet-class>ru.timtish.bridge.web.MultiPartImportServlet</servlet-class>
@@ -42,6 +51,10 @@
   <servlet>
     <servlet-name>zipExportServlet</servlet-name>
     <servlet-class>ru.timtish.bridge.web.ZipExportServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>mailExportServlet</servlet-name>
+    <servlet-class>ru.timtish.bridge.web.MailServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -97,6 +110,11 @@
   <servlet-mapping>
     <servlet-name>zipExportServlet</servlet-name>
     <url-pattern>/zip</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>mailExportServlet</servlet-name>
+    <url-pattern>/mail</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

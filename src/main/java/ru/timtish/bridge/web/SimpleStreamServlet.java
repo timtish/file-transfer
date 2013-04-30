@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
@@ -21,6 +22,9 @@ import ru.timtish.bridge.web.util.UrlConstants;
  */
 public class SimpleStreamServlet extends HttpServlet {
 
+	@Autowired
+	private StreamsBox streamsBox;
+
 	protected void doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String key = UUID.randomUUID().toString();
 		AbstractStream stream = new AbstractStream(request.getInputStream(), request.getContentLength(),
@@ -28,7 +32,7 @@ public class SimpleStreamServlet extends HttpServlet {
 		stream.setContentType(request.getContentType());
 		stream.setRepeatable(stream.getSize() < 1024 * 1024);
 		new CacheInitializer(stream).run();
-		StreamsBox.getInstance().addStreams(key, stream);
+		streamsBox.addStreams(key, stream);
 
 		response.getOutputStream().write(key.getBytes());
 	}
@@ -39,7 +43,7 @@ public class SimpleStreamServlet extends HttpServlet {
 
 		// todo: check permissions
 
-		AbstractStream stream = StreamsBox.getInstance().getStream(key);
+		AbstractStream stream = streamsBox.getStream(key);
 		if (stream == null) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Stream \"" + key + "\" not found");
 			return;
@@ -61,7 +65,7 @@ public class SimpleStreamServlet extends HttpServlet {
 		response.getOutputStream().close();
 
 		if (!stream.isRepeatable()) {
-			StreamsBox.getInstance().release(key);
+			streamsBox.release(key);
 		}
 	}
 }

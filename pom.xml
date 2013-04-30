@@ -35,6 +35,20 @@
       <version>1.4.0</version>
     </dependency>
 
+    <!-- spring -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>3.0.5.RELEASE</version>
+    </dependency>
+
+    <!-- mail server -->
+    <dependency>
+      <groupId>org.apache.james</groupId>
+      <artifactId>james-server-container-spring</artifactId>
+      <version>3.0-M2</version>
+    </dependency>
+
     <!-- tomcat 7 dependencies -->
     <dependency>
       <groupId>org.apache.tomcat</groupId>

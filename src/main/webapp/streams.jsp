@@ -17,8 +17,8 @@
 <table>
     <caption>Streams</caption>
     <tr><th>number</th><th>name</th><th>description</th><th>loaded</th></tr>
+    <jsp:useBean id="box" beanName="streamBox" type="ru.timtish.bridge.box.StreamsBox"/>
 <%
-    StreamsBox box = StreamsBox.getInstance();
     Set<String> newKeys = new HashSet<String>();
     String newKeyList = request.getParameter(UrlConstants.PARAM_NEW_KEYS);
     if (newKeyList != null) {

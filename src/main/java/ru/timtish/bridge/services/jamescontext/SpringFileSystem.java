@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package ru.timtish.bridge.services;
+package ru.timtish.bridge.services.jamescontext;
 
 import java.io.File;
 import java.io.FileNotFoundException;

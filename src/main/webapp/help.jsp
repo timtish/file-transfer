@@ -42,7 +42,7 @@
 - one click interface
 - touch/drag&drop interface
 + upload form
-+ user directory browser (с индикатором загрузки)
++ userName directory browser (с индикатором загрузки)
 + load link
 + typed icon
 + drag & drop files

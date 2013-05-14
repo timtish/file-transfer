@@ -48,6 +48,11 @@
       <artifactId>james-server-container-spring</artifactId>
       <version>3.0-M2</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.james</groupId>
+      <artifactId>apache-james-mailbox-api</artifactId>
+      <version>0.2-M1</version>
+    </dependency>
 
     <!-- tomcat 7 dependencies -->
     <dependency>

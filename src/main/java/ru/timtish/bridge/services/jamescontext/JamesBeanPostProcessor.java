@@ -16,35 +16,46 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
+package ru.timtish.bridge.services.jamescontext;
 
-package ru.timtish.bridge.services;
-
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.james.services.InstanceFactory;
+import org.apache.commons.logging.LogFactory;
+import org.apache.james.lifecycle.Configurable;
+import org.apache.james.lifecycle.LogEnabled;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
- * {@link org.apache.james.services.InstanceFactory} implementation which use a {@link org.springframework.beans.factory.BeanFactory} to handle the loading / injection of resources
+ * Inject Commons Log to beans which implement LogEnabled
  * 
  *
  */
-public class SpringInstanceFactory implements InstanceFactory, BeanFactoryAware {
+public class JamesBeanPostProcessor implements BeanPostProcessor {
 
-    private BeanFactory factory;
+	@Autowired
+	SpringConfigurationProvider provider;
 
-    public <T> T newInstance(Class<T> clazz) throws InstanceException {
-        return newInstance(clazz, null, null);
-    }
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		if (bean instanceof LogEnabled) {
+			((LogEnabled) bean).setLog(LogFactory.getLog(beanName));
+		}
+		if (bean instanceof Configurable) {
+			try {
+				HierarchicalConfiguration config = provider.getConfiguration(beanName);
+				((Configurable) bean).configure(config);
+			} catch (ConfigurationException e) {
+				System.err.println("Unable to load configuration for component: " + beanName);
+				//throw new IllegalArgumentException(e);
+			}
+		}
+		return bean;
+	}
 
-    public <T> T newInstance(Class<T> clazz, Log log, HierarchicalConfiguration config) throws InstanceException {
-		return factory.getBean(clazz);
-    }
-
-    public void setBeanFactory(BeanFactory factory) throws BeansException {
-        this.factory = factory;
-    }
-
+	@Override
+	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
 }

@@ -36,7 +36,9 @@
     <property name="coreHandlersPackage" value="org.apache.james.smtpserver.CoreCmdHandlerLoader"/>
   </bean>
 
-  <bean class="ru.timtish.bridge.services.JamesBeanPostProcessor"/>
+  <bean id="mailQueueFactory" class="ru.timtish.bridge.services.jamescontext.MemoryMailQueueFactory" />
+
+  <bean class="ru.timtish.bridge.services.jamescontext.JamesBeanPostProcessor"/>
 
   <bean id="dnsservice" class="org.apache.james.dnsservice.dnsjava.DNSJavaService" />
 
@@ -55,19 +57,25 @@
 
   <bean id="imapEncoder" factory-bean="imapEncoderFactory"  factory-method="buildImapEncoder"/>
 
-  <bean id="instanceFactory" class="ru.timtish.bridge.services.SpringInstanceFactory"/>
-
-  <bean class="ru.timtish.bridge.services.SpringConfigurationProvider"/>
-
-  <bean id="filesystem" class="ru.timtish.bridge.services.SpringFileSystem" />
-
-<!--
+  <bean id ="subscriptionManager" class="ru.timtish.bridge.services.mailstorage.MemoryMailSubscriptionManager" />
 
   <bean id="imapProcessor" class="org.apache.james.imap.processor.main.DefaultImapProcessorFactory" factory-method="createDefaultProcessor">
     <constructor-arg index="0" ref="mailboxmanager"/>
     <constructor-arg index="1" ref="subscriptionManager"/>
   </bean>
 
+  <bean id="instanceFactory" class="ru.timtish.bridge.services.jamescontext.SpringInstanceFactory"/>
+
+  <bean class="ru.timtish.bridge.services.jamescontext.SpringConfigurationProvider"/>
+
+  <bean id="filesystem" class="ru.timtish.bridge.services.jamescontext.SpringFileSystem" />
+
+  <bean id="mailboxmanager" class="ru.timtish.bridge.services.mailstorage.MemoryMailboxManager" />
+
+  <bean id="localusersrepository" class="ru.timtish.bridge.services.mailstorage.MemoryMailUsersRepository" />
+
+
+<!--
   <bean id="processormanagement" class="org.apache.james.mailetcontainer.lib.ProcessorManagement"/>
 
   <bean id="usermanagement" class="org.apache.james.user.lib.UserManagement" />
@@ -134,7 +142,6 @@
     <property name="defaultRepository" value="LocalUsers"/>
   </bean>
 
-  <bean id="localusersrepository" class="org.apache.james.user.lib.LocalUsersRepository" />
 
   <bean id="virtualusertable" class="org.apache.james.vut.lib.JamesVirtualUserTable" />
 

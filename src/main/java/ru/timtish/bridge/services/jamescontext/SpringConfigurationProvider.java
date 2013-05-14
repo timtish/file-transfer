@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package ru.timtish.bridge.services;
+package ru.timtish.bridge.services.jamescontext;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ResourceLoaderAware;
@@ -101,7 +102,13 @@ public class SpringConfigurationProvider implements ResourceLoaderAware, Initial
                     throw new ConfigurationException("Unable to load configuration for component " + name, e);
                 }
             } else {
-				throw new ConfigurationException("Unable to load configuration for component: " + name + " by resource " + resourcePath);
+				return new HierarchicalConfiguration() {
+					@Override
+					public SubnodeConfiguration configurationAt(String key) {
+						return super.configurationAt("");
+					}
+				};
+				//throw new ConfigurationException("Unable to load configuration for component: " + name + " by resource " + resourcePath);
 			}
         }
     }

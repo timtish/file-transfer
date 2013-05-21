@@ -9,7 +9,7 @@ import ru.timtish.bridge.pipeline.AbstractStream;
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-@Component("streamBox")
+@Component("streamsBox")
 public class StreamsBox {
 
 	private static final Logger LOG = Logger.getLogger(StreamsBox.class.getName());
@@ -34,7 +34,7 @@ public class StreamsBox {
 		LOG.fine("stream " + stream.getName() + " linked");
 		this.streams.put(key, stream);
 		// todo: check security
-		root.getChilds().add(new BoxFile(key, root));
+		root.getChilds().add(new BoxFile(stream, root));
 	}
 
 	public void release(String key) {

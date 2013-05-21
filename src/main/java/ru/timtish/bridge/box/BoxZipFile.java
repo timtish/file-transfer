@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.converter.Zip;
 
@@ -16,22 +15,18 @@ import ru.timtish.bridge.pipeline.converter.Zip;
  */
 public class BoxZipFile implements BoxEntity {
 
-	@Autowired
-	private StreamsBox streamsBox;
-
 	private BoxEntity parent;
 
-	private String zipStreamKey;
 	private String zipFilePath;
 	private String name;
 	private Long size;
 
 	transient private AbstractStream in;
 
-	public BoxZipFile(String zipStreamKey, String zipFilePath, Long size, BoxEntity parent) {
-		this.zipStreamKey = zipStreamKey;
+	public BoxZipFile(AbstractStream stream, String zipFilePath, Long size, BoxEntity parent) {
 		this.parent = parent;
 		this.size = size;
+		this.in = stream;
 		setZipFilePath(zipFilePath);
 	}
 
@@ -63,9 +58,6 @@ public class BoxZipFile implements BoxEntity {
 	}
 
 	public AbstractStream getInputStream() {
-		if (in == null) {
-			in = streamsBox.getStream(zipStreamKey);
-		}
 		return in;
 	}
 
@@ -81,28 +73,22 @@ public class BoxZipFile implements BoxEntity {
 		this.parent = parent;
 	}
 
-	public String getZipStreamKey() {
-		return zipStreamKey;
-	}
-
-	public void setZipStreamKey(String zipStreamKey) {
-		this.zipStreamKey = zipStreamKey;
-	}
-
 	public String getZipFilePath() {
 		return zipFilePath;
 	}
 
 	public void setZipFilePath(String zipFilePath) {
-		if (zipFilePath != null && zipFilePath.endsWith("/")) zipFilePath = zipStreamKey.substring(0, zipFilePath.length() - 1);
+		if (zipFilePath != null && zipFilePath.endsWith("/")) zipFilePath = zipFilePath.substring(0, zipFilePath.length() - 1);
 		this.zipFilePath = zipFilePath;
 		this.name = zipFilePath;
 		if (name != null && name.contains("/")) name = name.substring(name.lastIndexOf("/") + 1);
+		System.out.println("setZipFilePath name:" + this.name  + " zipPath:" + this.zipFilePath);
 	}
 
 	@Override
 	public BoxEntity getChild(String path) {
-		return new BoxZipFile(zipStreamKey, zipFilePath + "/" + path, null, parent);
+		System.out.println("getChild name:" + zipFilePath + "/" + path);
+		return new BoxZipFile(this.in, zipFilePath + "/" + path, null, parent);
 	}
 
 	public Date getDate() {
@@ -118,7 +104,6 @@ public class BoxZipFile implements BoxEntity {
 	public String toString() {
 		return "BoxZipFile{" +
 				"name='" + getName() + '\'' +
-				", streamKey='" + zipStreamKey + '\'' +
 				", zipFilePath='" + zipFilePath + '\'' +
 				'}';
 	}

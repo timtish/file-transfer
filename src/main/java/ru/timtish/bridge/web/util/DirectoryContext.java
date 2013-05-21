@@ -141,7 +141,8 @@ public class DirectoryContext extends BaseDirContext {
 			ResourceAttributes result = new ResourceAttributes();
 			result.setName(entity.getName());
 			result.setCreationDate(entity.getDate());
-			result.setContentLength(entity.getSize());
+			Long size = entity.getSize();
+			if (size != null) result.setContentLength(size);
 			result.setCollection(entity.isContainer());
 			System.out.println(">attributes " + name + " : " + entity.getName() + " " + entity.isContainer() + " " + entity.getDate() + " " + entity.getSize());
 			return result;

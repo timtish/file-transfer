@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.converter.Zip;
 
@@ -16,12 +15,7 @@ import ru.timtish.bridge.pipeline.converter.Zip;
  */
 public class BoxFile implements BoxEntity {
 
-	@Autowired
-	private StreamsBox streamsBox;
-
 	private BoxEntity parent;
-
-	private String streamKey;
 
 	transient private AbstractStream in;
 
@@ -29,8 +23,8 @@ public class BoxFile implements BoxEntity {
 
 	transient List<BoxEntity> childs = Collections.emptyList();
 
-	public BoxFile(String streamKey, BoxEntity parent) {
-		this.streamKey = streamKey;
+	public BoxFile(AbstractStream stream, BoxEntity parent) {
+		this.in = stream;
 		this.parent = parent;
 	}
 
@@ -66,14 +60,7 @@ public class BoxFile implements BoxEntity {
 	}
 
 	public AbstractStream getInputStream() {
-		if (in == null) {
-			in = streamsBox.getStream(streamKey);
-		}
 		return in;
-	}
-
-	public String getKey() {
-		return streamKey;
 	}
 
 	public List<BoxEntity> getChilds() {
@@ -94,7 +81,25 @@ public class BoxFile implements BoxEntity {
 	}
 
 	@Override
-	public BoxEntity getChild(String path) {
+	public BoxEntity getChild(String fileName) {
+
+		System.out.println("f.findEntity: " + fileName + " in " + getName());
+
+		if (fileName == null) return this;
+		if (fileName.startsWith("/")) fileName = fileName.substring(1);
+		if (fileName.endsWith("/")) fileName = fileName.substring(0, fileName.length() - 1);
+		if (fileName.isEmpty()) return this;
+
+		for (BoxEntity entity : getChilds()) {
+
+			System.out.println("f.findEntity: child: " + entity.getName());
+			if (fileName.equals(entity.getName())) return entity;
+			if (entity.isContainer() && fileName.startsWith(entity.getName() + "/")) {
+				return entity.getChild(fileName.substring(entity.getName().length() + 1));
+			}
+		}
+		System.out.println("f.findEntity: not found");
+
 		return null;
 	}
 
@@ -108,7 +113,6 @@ public class BoxFile implements BoxEntity {
 	public String toString() {
 		return "BoxFile{" +
 				"name='" + getName() + '\'' +
-				", streamKey='" + streamKey + '\'' +
 				", isContainer=" + isContainer +
 				'}';
 	}
@@ -119,7 +123,7 @@ public class BoxFile implements BoxEntity {
 		isContainer = false;
 		try {
 			if (getName().toLowerCase().endsWith(".zip")) {
-				childs = Zip.getFilesTree(getInputStream().createCopy(), getKey());
+				childs = Zip.getFilesTree(getInputStream());
 				isContainer = true;
 			}
 		} catch (Exception e) {

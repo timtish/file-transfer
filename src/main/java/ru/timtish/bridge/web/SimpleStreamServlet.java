@@ -6,11 +6,12 @@ import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.HttpRequestHandler;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
@@ -20,10 +21,20 @@ import ru.timtish.bridge.web.util.UrlConstants;
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public class SimpleStreamServlet extends HttpServlet {
+@Component("simpleStreamServlet")
+public class SimpleStreamServlet implements HttpRequestHandler {
 
 	@Autowired
 	private StreamsBox streamsBox;
+
+	@Override
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if ("get".equalsIgnoreCase(request.getMethod())) {
+			doGet(request, response);
+		} else {
+			doPost(request, response);
+		}
+	}
 
 	protected void doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String key = UUID.randomUUID().toString();

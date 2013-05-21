@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 import ru.timtish.bridge.box.BoxEntity;
+import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.converter.Zip;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +23,7 @@ public class ZipTest {
 
 			if (System.getProperty("sun.zip.encoding") == null) System.setProperty("sun.zip.encoding", "CP866");
 
-			List<BoxEntity> files = Zip.getFilesTree(zip, "");
+			List<BoxEntity> files = Zip.getFilesTree(new AbstractStream(zip, (Long) null, null, null, null));
 			assertEquals(files.size(), 2);
 			assertEquals(files.get(0).getChilds().size(), 1);
 

@@ -3,29 +3,31 @@ package ru.timtish.bridge.web;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.HttpRequestHandler;
 import ru.timtish.bridge.box.BoxUtil;
-import ru.timtish.bridge.pipeline.cache.CacheInitializer;
-import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.box.StreamsBox;
+import ru.timtish.bridge.pipeline.AbstractStream;
+import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.web.util.UrlConstants;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public class UrlEncodedImportServlet extends javax.servlet.http.HttpServlet {
+@Component("simpleFormServlet")
+public class UrlEncodedImportServlet implements HttpRequestHandler {
 
 	@Autowired
 	private StreamsBox streamsBox;
 
-	private static final Logger LOG = Logger.getLogger(UrlEncodedImportServlet.class.getName());
-
-	protected void doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String data = request.getParameter("data");
 		if (data != null) {
 			byte[] buffer = data.getBytes();

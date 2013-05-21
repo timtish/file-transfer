@@ -10,11 +10,12 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.HttpRequestHandler;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.web.util.UrlConstants;
@@ -22,12 +23,14 @@ import ru.timtish.bridge.web.util.UrlConstants;
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public class ZipExportServlet extends HttpServlet {
+@Component("zipExportServlet")
+public class ZipExportServlet implements HttpRequestHandler {
 
 	@Autowired
 	private StreamsBox streamsBox;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> streamKeyList;
 		String keys = request.getParameter(UrlConstants.PARAM_KEYS);
 		if (keys != null) {

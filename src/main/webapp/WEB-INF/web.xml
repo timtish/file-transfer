@@ -3,7 +3,12 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Archetype Created Web Application</display-name>
+  <display-name>File bridge</display-name>
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>WEB-INF/context.xml</param-value>
+  </context-param>
 
   <filter>
     <filter-name>characterEncodingFilter</filter-name>
@@ -23,39 +28,36 @@
     <url-pattern>*</url-pattern>
   </filter-mapping>
 
-  <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>WEB-INF/context.xml</param-value>
-    <!--<param-value>classpath:WEB-INF/context.xml</param-value>-->
-  </context-param>
-
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
 
   <servlet>
     <servlet-name>multiPartServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.MultiPartImportServlet</servlet-class>
+    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>simpleFormServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.UrlEncodedImportServlet</servlet-class>
+    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>simpleStreamServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.SimpleStreamServlet</servlet-class>
+    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>urlStreamServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.UrlImportServlet</servlet-class>
+    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>zipExportServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.ZipExportServlet</servlet-class>
+    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>mailExportServlet</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.MailServlet</servlet-class>
+    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
   </servlet>
 
   <servlet>

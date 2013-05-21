@@ -1,5 +1,6 @@
 package ru.timtish.bridge.box;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +32,11 @@ public class BoxUtil {
 		if (contentType.startsWith("application/x-")) return "exe";
 		if (contentType.startsWith("application")) return "doc";
 		return "bin";
+	}
+
+	public static String getId(BoxEntity entity) {
+		if (entity == null) return "";
+		return getId(entity.getParent()) + File.separator + entity.getName();
 	}
 
 	public static BoxDirectory findById(String boxId) {

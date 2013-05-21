@@ -7,21 +7,23 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.HttpRequestHandler;
 import ru.timtish.bridge.box.BoxUtil;
-import ru.timtish.bridge.pipeline.cache.CacheInitializer;
-import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.box.StreamsBox;
+import ru.timtish.bridge.pipeline.AbstractStream;
+import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.web.util.UrlConstants;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public class UrlImportServlet extends HttpServlet {
+@Component("urlStreamServlet")
+public class UrlImportServlet implements HttpRequestHandler {
 
 	private static final Logger LOG = Logger.getLogger(UrlImportServlet.class.getName());
 
@@ -34,6 +36,14 @@ public class UrlImportServlet extends HttpServlet {
 	private StreamsBox streamsBox;
 
 	@Override
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if ("get".equalsIgnoreCase(request.getMethod())) {
+			doGet(request, response);
+		} else {
+			doPost(request, response);
+		}
+	}
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String url = request.getParameter(PARAM_URL);
 		String description = request.getParameter(PARAM_DESCRIPTION);
@@ -55,7 +65,6 @@ public class UrlImportServlet extends HttpServlet {
 		response.sendRedirect("box.jsp?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);
 	}
 
-	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentLength(BIG_LENGTH);
 		for (int i = 0; i < BIG_LENGTH; i++) {

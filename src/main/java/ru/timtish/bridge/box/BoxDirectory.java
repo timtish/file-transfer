@@ -91,11 +91,14 @@ public class BoxDirectory implements BoxEntity {
 		if (fileName.isEmpty()) return this;
 
 		for (BoxEntity entity : getChilds()) {
+
+			System.out.println("findEntity: child: " + entity.getName());
 			if (fileName.equals(entity.getName())) return entity;
 			if (entity.isContainer() && fileName.startsWith(entity.getName() + "/")) {
 				return entity.getChild(fileName.substring(entity.getName().length() + 1));
 			}
 		}
+		System.out.println("findEntity: not found");
 
 		return null;
 	}

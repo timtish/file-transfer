@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +13,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.HttpRequestHandler;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
@@ -23,16 +24,17 @@ import ru.timtish.bridge.web.util.UrlConstants;
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public class MultiPartImportServlet extends HttpServlet {
+@Component("multiPartServlet")
+public class MultiPartImportServlet implements HttpRequestHandler {
 
 	@Autowired
 	private StreamsBox streamsBox;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String newKeys = "";
 
 		// multipart/mixed application/octet-stream
-
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 		if(isMultipart)
 		{
@@ -61,9 +63,10 @@ public class MultiPartImportServlet extends HttpServlet {
 			for (FileItem file : items) {
 				if (!file.isFormField()) {
 					String key = UUID.randomUUID().toString();
-					AbstractStream stream = new AbstractStream(file.getInputStream(), file.getSize(),
+					long size = file.getSize();
+					AbstractStream stream = new AbstractStream(file.getInputStream(), size >= 0 ? size : null,
 							BoxUtil.safeFileName(file.getName()), request.getRemoteUser(), description);
-					stream.setRepeatable(stream.getSize() < 1024 * 1024);
+					stream.setRepeatable(stream.getSize() < 100 * 1024 * 1024); // todo: from runtime settings
 					stream.setContentType(file.getContentType());
 					streamsBox.addStreams(key, stream);
 					if (file.isInMemory()) {

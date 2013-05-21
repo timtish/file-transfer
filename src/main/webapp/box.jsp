@@ -7,6 +7,8 @@
 <%@ page import="ru.timtish.bridge.pipeline.AbstractStream" %>
 <%@ page import="ru.timtish.bridge.box.*" %>
 <%@ page import="org.apache.james.mailbox.store.streaming.AbstractFullContent" %>
+<%@ page import="org.springframework.web.context.WebApplicationContext" %>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
 <html>
 <head>
     <title>Files box</title>
@@ -27,9 +29,12 @@
 <table>
     <caption>Box <%=request.getRemoteUser()%></caption>
     <tr><th></th><th>№</th><th>файл</th><th>комментарий</th><th>кеш</th></tr>
-    <jsp:useBean id="streamsBox" beanName="streamBox" type="ru.timtish.bridge.box.StreamsBox"/>
+    <!--jsp:useBean id="streamsBox" beanName="streamsBox" type="ru.timtish.bridge.box.StreamsBox"/-->
     <!-- remove scriptlets -->
 <%
+
+    WebApplicationContext ac = WebApplicationContextUtils.getRequiredWebApplicationContext(application);
+    StreamsBox streamsBox = ac.getBean(StreamsBox.class);
     String box = request.getParameter(UrlConstants.PARAM_BOX);
     String user = request.getRemoteUser();
     String path = request.getParameter(UrlConstants.PARAM_BOX_PATH);
@@ -44,7 +49,8 @@
 
     for (BoxEntity stream : dir.getChilds()) {
         boolean isFile = stream instanceof BoxFile;
-        String key = isFile ? ((BoxFile) stream).getKey() : stream.getName();
+        //String key = isFile ? ((BoxFile) stream).getKey() : stream.getName();
+        String key = BoxUtil.getId(stream);
         AbstractStream in = isFile ? ((BoxFile) stream).getInputStream() : null;
         %><tr>
             <td><input type="checkbox" id="<%=key%>" class="sf" /></td>

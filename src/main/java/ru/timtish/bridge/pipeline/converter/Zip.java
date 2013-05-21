@@ -2,7 +2,10 @@ package ru.timtish.bridge.pipeline.converter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -34,7 +37,7 @@ public class Zip {
 		stream.closeEntry();
 	}
 
-	private static List<BoxEntity> getChilds(ZipInputStream zip, String zipStreamKey) throws IOException {
+	private static List<BoxEntity> getChilds(ZipInputStream zip, AbstractStream stream) throws IOException {
 		List<BoxEntity> list = new ArrayList<BoxEntity>();
 		ZipEntry zipFile;
 		try {
@@ -52,7 +55,9 @@ public class Zip {
 				if (zipFile.isDirectory()) {
 					entity = new BoxDirectory(fileName, new Date(zipFile.getTime()), new ArrayList<BoxEntity>(), subfolder);
 				} else {
-					entity = new BoxZipFile(zipStreamKey, zipFile.getName(), zipFile.getSize(), null);
+					long size = zipFile.getSize();
+					System.out.println("size " + zipFile.getName() + " " + size);
+					entity = new BoxZipFile(stream, zipFile.getName(), size >=0 ? size : null, null);
 				}
 
 				if (subfolder != null) {
@@ -89,10 +94,10 @@ public class Zip {
 		return null;
 	}
 
-	public static List<BoxEntity> getFilesTree(InputStream inputStream, String zipStreamKey) throws IOException {
-		ZipInputStream zip = new ZipInputStream(inputStream);
+	public static List<BoxEntity> getFilesTree(AbstractStream inputStream) throws IOException {
+		ZipInputStream zip = new ZipInputStream(inputStream.createCopy());
 		try {
-			return getChilds(zip, zipStreamKey);
+			return getChilds(zip, inputStream);
 		} finally {
 			zip.close();
 		}
@@ -108,7 +113,7 @@ public class Zip {
 				if (path.equals(zipFile.getName())) {
 					if (!zipFile.isDirectory()) {
 						long size = zipFile.getSize();
-						fileStream = new CachedInMemoryInputStream(zip, size);
+						fileStream = new CachedInMemoryInputStream(zip, size >=0 ? size : null);
 						return fileStream.createCopy();
 					} else {
 						throw new IllegalArgumentException(path + " is directory");

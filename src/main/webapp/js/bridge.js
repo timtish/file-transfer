@@ -27,13 +27,23 @@ ru.timtish.bridge.alert = function (str) {
 }
 
 ru.timtish.bridge.loadFilesAsZip = function loadFilesAsZip(streamKeyList) {
-    /*ru.timtish.bridge.location = window.location.toString();
-    ru.timtish.bridge.location = ru.timtish.bridge.location.substring(0, ru.timtish.bridge.location.lastIndexOf('/'));*/
     $.fileDownload("zip", {
         httpMethod: "POST",
         data: {
             keys: streamKeyList.join(','),
-            box: "box.zip" /* todo: set box id or zip name */
+            box: "box.zip"
         }
     })
+}
+
+ru.timtish.bridge.sendToEmail = function loadFilesAsZip(streamKeyList, targetEmail) {
+    $.ajax("mail", {
+        type: "POST",
+        data: {
+            keys: streamKeyList.join(','),
+            box: "box.zip",
+            to: targetEmail
+        }
+    }).done(function(d) { alert("success " + d); })
+      .fail(function() { alert("error"); })
 }

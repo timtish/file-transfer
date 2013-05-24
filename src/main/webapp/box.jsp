@@ -27,10 +27,6 @@
 <a href="webdav">Подключить как сетевой диск</a>
 
 <table>
-    <caption>Box <%=request.getRemoteUser()%></caption>
-    <tr><th></th><th>№</th><th>файл</th><th>комментарий</th><th>кеш</th></tr>
-    <!--jsp:useBean id="streamsBox" beanName="streamsBox" type="ru.timtish.bridge.box.StreamsBox"/-->
-    <!-- remove scriptlets -->
 <%
 
     WebApplicationContext ac = WebApplicationContextUtils.getRequiredWebApplicationContext(application);
@@ -47,6 +43,14 @@
     BoxEntity dir = BoxUtil.getBoxEntity(user, box, path);
     if (dir == null) dir = streamsBox.getRoot();
 
+%>
+
+    <caption>Box <%=dir.getName()%></caption>
+    <tr><th></th><th>№</th><th>файл</th><th>комментарий</th><th>кеш</th></tr>
+    <!--jsp:useBean id="streamsBox" beanName="streamsBox" type="ru.timtish.bridge.box.StreamsBox"/-->
+    <!-- todo: remove scriptlets -->
+
+<%
     for (BoxEntity stream : dir.getChilds()) {
         boolean isFile = stream instanceof BoxFile;
         //String key = isFile ? ((BoxFile) stream).getKey() : stream.getName();
@@ -73,6 +77,16 @@
         var streamKeyList = [];
         for (var i = 0; i < sf.length; i++) streamKeyList.push(sf[i].id);
         ru.timtish.bridge.loadFilesAsZip(streamKeyList);
+    });
+    $('#send-to-email').on('click', function () {
+        var sf = $('input:checked.sf');
+        if (sf.length == 0) {
+            ru.timtish.bridge.alert("Файлы не выбраны");
+            return;
+        }
+        var streamKeyList = [];
+        for (var i = 0; i < sf.length; i++) streamKeyList.push(sf[i].id);
+        ru.timtish.bridge.sendToEmail(streamKeyList, 'timtish@gmail.com');
     });
 </script>
 </body>

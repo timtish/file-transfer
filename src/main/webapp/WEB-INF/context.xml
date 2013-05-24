@@ -19,6 +19,10 @@
   <context:component-scan base-package="ru.timtish.bridge" />
   <context:annotation-config />
 
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="localhost"/>
+  </bean>
+
   <bean id="mailserver" class="org.apache.james.JamesMailServer"/>
 
   <bean id="pop3server"  class="org.apache.james.pop3server.netty.POP3Server" >

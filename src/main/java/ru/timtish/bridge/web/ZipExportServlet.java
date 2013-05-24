@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.HttpRequestHandler;
+import ru.timtish.bridge.box.BoxEntity;
+import ru.timtish.bridge.box.BoxFile;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.web.util.UrlConstants;
@@ -31,12 +33,12 @@ public class ZipExportServlet implements HttpRequestHandler {
 
 	@Override
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<String> streamKeyList;
+		List<String> fileNameList;
 		String keys = request.getParameter(UrlConstants.PARAM_KEYS);
 		if (keys != null) {
-			streamKeyList = Arrays.asList(keys.split(","));
+			fileNameList = Arrays.asList(keys.split(","));
 		} else {
-			streamKeyList = new ArrayList<String>();
+			fileNameList = new ArrayList<String>();
 		}
 
 		// todo: check permissions
@@ -49,10 +51,12 @@ public class ZipExportServlet implements HttpRequestHandler {
 
 		ZipOutputStream zipStream = new ZipOutputStream(response.getOutputStream());
 		try {
-			for (String key : streamKeyList) {
-				AbstractStream stream = streamsBox.getStream(key);
+			for (String fileName : fileNameList) {
+				BoxEntity entity = streamsBox.getRoot().getChild(fileName);
 
-				if (stream == null) continue; // todo: show warning
+				if (entity instanceof BoxFile) continue; // todo: show warning
+
+				AbstractStream stream = ((BoxFile) entity).getInputStream();
 
 				ZipEntry zipEntry = new ZipEntry(stream.getName());
 				zipEntry.setSize(stream.getSize());
@@ -62,7 +66,7 @@ public class ZipExportServlet implements HttpRequestHandler {
 				stream.write(zipStream);
 
 				if (!stream.isRepeatable()) {
-					streamsBox.release(key);
+					streamsBox.release(fileName);
 				}
 			}
 		} finally {

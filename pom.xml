@@ -41,6 +41,12 @@
       <artifactId>spring-jdbc</artifactId>
       <version>3.0.5.RELEASE</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <version>3.0.5.RELEASE</version>
+      <!-- todo: update spring version -->
+    </dependency>
 
     <!-- mail server -->
     <dependency>

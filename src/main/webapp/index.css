@@ -1,0 +1,23 @@
+label {
+    display: inline-block;
+    text-align: right;
+    vertical-align: top;
+    width: 17em;
+}
+
+input, textarea {
+    width: 28em;
+}
+
+input[type=submit] {
+    background: none repeat scroll 0 0 #EEDDAA;
+    border: 1px solid #554411;
+    border-radius: 4px 4px 4px 4px;
+    height: 4ex;
+    box-shadow: 2px 1px 2px #443300;
+    /*transition: all 1s ease-out;*/
+}
+input[type=submit]:active {
+    margin: 5px 3px 3px 5px;
+    box-shadow: 1px 0px 1px #443300;
+}

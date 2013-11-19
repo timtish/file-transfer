@@ -9,7 +9,7 @@ form {
     border: dotted 1px #deb887;
 }
 
-input {
+input, textarea {
     margin: 4px;
 }
 

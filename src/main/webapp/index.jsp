@@ -5,6 +5,7 @@
     <title>Add file</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="main.css" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
     <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
     <script src="js/jquery.MultiFile.js" type="text/javascript"></script>
     <script src="js/bridge.js" type="text/javascript"></script>

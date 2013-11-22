@@ -1,22 +1,20 @@
 package ru.timtish.bridge.web;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.HttpRequestHandler;
+import ru.timtish.bridge.box.*;
+import ru.timtish.bridge.pipeline.AbstractStream;
+import ru.timtish.bridge.pipeline.cache.CacheInitializer;
+import ru.timtish.bridge.web.util.UrlConstants;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.HttpRequestHandler;
-import ru.timtish.bridge.box.BoxUtil;
-import ru.timtish.bridge.box.StreamsBox;
-import ru.timtish.bridge.pipeline.AbstractStream;
-import ru.timtish.bridge.pipeline.cache.CacheInitializer;
-import ru.timtish.bridge.web.util.UrlConstants;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.UUID;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -54,7 +52,13 @@ public class SimpleStreamServlet implements HttpRequestHandler {
 
 		// todo: check permissions
 
-		AbstractStream stream = streamsBox.getStream(key);
+        /*BoxEntity box = BoxUtil.findById(key);
+        AbstractStream stream = null;
+        if (box instanceof BoxFile) stream = ((BoxFile) box).getInputStream();
+        if (box instanceof BoxZipFile) stream = ((BoxZipFile) box).getInputStream();
+        //if (box instanceof BoxDirectory) stream = ((BoxDirectory) box).getInputStream(); // todo: zip directory   */
+        AbstractStream stream = streamsBox.getStream(key);
+
 		if (stream == null) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Stream \"" + key + "\" not found");
 			return;
@@ -76,7 +80,7 @@ public class SimpleStreamServlet implements HttpRequestHandler {
 		response.getOutputStream().close();
 
 		if (!stream.isRepeatable()) {
-			streamsBox.release(key);
+			streamsBox.release(BoxUtil.findStreamKey(streamsBox, stream));
 		}
 	}
 }

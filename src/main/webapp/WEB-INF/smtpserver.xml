@@ -19,8 +19,8 @@
 
 <!-- See http://james.apache.org/server/3/config.html for usage -->
 
-<smtpserver enabled="true">
-  <port>25</port>
+<smtpserver enabled="false">
+  <bind>127.0.0.1:25</bind>
   <connectionBacklog>200</connectionBacklog>
   <tls socketTLS="false" startTLS="false">
   </tls>

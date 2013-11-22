@@ -1,11 +1,5 @@
 package ru.timtish.bridge.services.mailstorage;
 
-import java.io.InputStream;
-import java.util.*;
-import java.util.logging.Logger;
-
-import javax.mail.Flags;
-
 import org.apache.commons.logging.Log;
 import org.apache.james.mailbox.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +9,11 @@ import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.cache.AutoClosableInputStream;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.pipeline.cache.CachedInMemoryInputStream;
+
+import javax.mail.Flags;
+import java.io.InputStream;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)

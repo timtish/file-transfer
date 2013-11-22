@@ -11,6 +11,11 @@ public class UrlConstants {
 	public static final String PARAM_KEY = "key";
 
 	/**
+	 *
+	 */
+	public static final String PARAM_BOX_ID = "box";
+
+	/**
 	 * Список новых загруженных файлов.
 	 */
 	public static final String PARAM_NEW_KEYS = "nk";

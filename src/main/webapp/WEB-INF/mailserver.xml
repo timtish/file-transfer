@@ -23,6 +23,6 @@
 <mailserver>
   <postmaster>user1@localhost</postmaster>
   <enableVirtualHosting> false </enableVirtualHosting>     
-  <defaultDomain> localhost </defaultDomain>
-  <helloName autodetect="true">myMailServer</helloName>
+  <defaultDomain>localhost</defaultDomain>
+  <helloName autodetect="true">timtish Mail Server (devel)</helloName>
 </mailserver>

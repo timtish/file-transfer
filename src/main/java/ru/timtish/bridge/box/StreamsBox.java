@@ -1,10 +1,10 @@
 package ru.timtish.bridge.box;
 
-import java.util.*;
-import java.util.logging.Logger;
-
 import org.springframework.stereotype.Component;
 import ru.timtish.bridge.pipeline.AbstractStream;
+
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)

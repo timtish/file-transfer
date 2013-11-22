@@ -20,14 +20,15 @@
 
 <!-- See http://james.apache.org/server/3/config.html for usage -->
 
-<pop3server enabled="true">
-  <port>110</port>
+<pop3server enabled="false">
+  <bind>127.0.0.1:110</bind>
   <connectionBacklog>200</connectionBacklog>
-  <tls socketTLS="false" startTLS="false">
+  <useTLS>false</useTLS>
+  <!--tls socketTLS="false" startTLS="false">
       <keystore>file://conf/keystore</keystore>
       <secret>yoursecret</secret>
       <provider>org.bouncycastle.jce.provider.BouncyCastleProvider</provider>
-  </tls>
+  </tls-->
   <handler>
       <connectiontimeout>1200</connectiontimeout>
       <connectionLimit> 0 </connectionLimit>

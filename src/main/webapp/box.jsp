@@ -53,11 +53,11 @@
 <%
     for (BoxEntity stream : dir.getChilds()) {
         boolean isFile = stream instanceof BoxFile;
-        //String key = isFile ? ((BoxFile) stream).getKey() : stream.getName();
-        String key = BoxUtil.getId(stream);
+        String key = isFile ? BoxUtil.findStreamKey(streamsBox, ((BoxFile)stream).getInputStream()) : null;
+        String boxId = BoxUtil.getId(stream);
         AbstractStream in = isFile ? ((BoxFile) stream).getInputStream() : null;
         %><tr>
-            <td><input type="checkbox" id="<%=key%>" class="sf" /></td>
+            <td><input type="checkbox" id="<%=boxId%>" class="sf" /></td>
             <td class="<%=in != null ? "type-" + BoxUtil.contentTypeIcon(in.getContentType()) : ""%>" title="<%=in != null ? in.getContentType() : ""%>"><%=i++%></td>
             <td><a href="<%=isFile ? "get?key=" + key : stream.getName() + "/" %>" <%if(isFile && StreamStatus.CLOSED.equals(in.getStatus())){%>style="color: gray;text-decoration: line-through;"<%}else if(newKeys.contains(key)){%>style="color: green;"<%}else{%>style="color: blue;"<%}%>><%=stream.getName()%></a></td>
             <td><%=stream.getDescription() == null ? "" : stream.getDescription()%></td>

@@ -1,0 +1,17 @@
+
+#content {
+    padding: 8px;
+    border-spacing: 0px;
+}
+
+.table-header th {
+    text-align: left;
+    background: linear-gradient(to top, #f5f5dc, #f1c3a2);
+    border: 1px dotted #deb887;
+    border-bottom: 0;
+    margin: 1px 3px;
+}
+
+th.file-description {
+    text-align: right;
+}

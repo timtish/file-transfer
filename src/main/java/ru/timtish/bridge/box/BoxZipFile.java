@@ -1,14 +1,15 @@
 package ru.timtish.bridge.box;
 
+import ru.timtish.bridge.pipeline.AbstractStream;
+import ru.timtish.bridge.pipeline.converter.Zip;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
-
-import ru.timtish.bridge.pipeline.AbstractStream;
-import ru.timtish.bridge.pipeline.converter.Zip;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -78,17 +79,17 @@ public class BoxZipFile implements BoxEntity {
 	}
 
 	public void setZipFilePath(String zipFilePath) {
-		if (zipFilePath != null && zipFilePath.endsWith("/")) zipFilePath = zipFilePath.substring(0, zipFilePath.length() - 1);
+		if (zipFilePath != null && zipFilePath.endsWith(File.separator)) zipFilePath = zipFilePath.substring(0, zipFilePath.length() - 1);
 		this.zipFilePath = zipFilePath;
 		this.name = zipFilePath;
-		if (name != null && name.contains("/")) name = name.substring(name.lastIndexOf("/") + 1);
+		if (name != null && name.contains(File.separator)) name = name.substring(name.lastIndexOf(File.separatorChar) + 1);
 		System.out.println("setZipFilePath name:" + this.name  + " zipPath:" + this.zipFilePath);
 	}
 
 	@Override
 	public BoxEntity getChild(String path) {
-		System.out.println("getChild name:" + zipFilePath + "/" + path);
-		return new BoxZipFile(this.in, zipFilePath + "/" + path, null, parent);
+		System.out.println("getChild name:" + zipFilePath + File.separatorChar + path);
+		return new BoxZipFile(this.in, zipFilePath + File.separatorChar + path, null, parent);
 	}
 
 	public Date getDate() {

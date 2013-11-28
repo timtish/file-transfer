@@ -1,14 +1,15 @@
 package ru.timtish.bridge.box;
 
+import ru.timtish.bridge.pipeline.AbstractStream;
+import ru.timtish.bridge.pipeline.converter.Zip;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
-
-import ru.timtish.bridge.pipeline.AbstractStream;
-import ru.timtish.bridge.pipeline.converter.Zip;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -86,15 +87,15 @@ public class BoxFile implements BoxEntity {
 		System.out.println("f.findEntity: " + fileName + " in " + getName());
 
 		if (fileName == null) return this;
-		if (fileName.startsWith("/")) fileName = fileName.substring(1);
-		if (fileName.endsWith("/")) fileName = fileName.substring(0, fileName.length() - 1);
+		if (fileName.startsWith(File.separator)) fileName = fileName.substring(1);
+		if (fileName.endsWith(File.separator)) fileName = fileName.substring(0, fileName.length() - 1);
 		if (fileName.isEmpty()) return this;
 
 		for (BoxEntity entity : getChilds()) {
 
 			System.out.println("f.findEntity: child: " + entity.getName());
 			if (fileName.equals(entity.getName())) return entity;
-			if (entity.isContainer() && fileName.startsWith(entity.getName() + "/")) {
+			if (entity.isContainer() && fileName.startsWith(entity.getName() + File.separatorChar)) {
 				return entity.getChild(fileName.substring(entity.getName().length() + 1));
 			}
 		}

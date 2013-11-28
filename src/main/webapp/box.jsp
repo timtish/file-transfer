@@ -6,27 +6,36 @@
 <%@ page import="ru.timtish.bridge.web.util.UrlConstants" %>
 <%@ page import="ru.timtish.bridge.pipeline.AbstractStream" %>
 <%@ page import="ru.timtish.bridge.box.*" %>
-<%@ page import="org.apache.james.mailbox.store.streaming.AbstractFullContent" %>
 <%@ page import="org.springframework.web.context.WebApplicationContext" %>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
+<%@ page import="java.io.File" %>
 <html>
 <head>
     <title>Files box</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="main.css" />
-    <script type="text/javascript" src="js/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="box.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="js/bridge.js"></script>
     <script type="text/javascript" src="js/jquery.fileDownload.js"></script>
 </head>
-<body>
-<button id="selected-as-zip">Загрузить архивом</button>
-<button id="send-to-email">Отправить почтой</button>
-<button id="new-box">Объединить в новый пакет</button>
+<body id="mf">
+<div id="menu">
+    <a class="menu1" href="index.jsp">Добавить файл</a>
+    <button id="selected-as-zip">Загрузить архивом</button>
+    <button id="send-to-email">Отправить почтой</button>
+    <button id="new-box">Объединить в новый пакет</button>
+    <a href="webdav">Подключить как сетевой диск</a>
+</div>
 
-<a href="index.jsp">Добавить файл</a>
-<a href="webdav">Подключить как сетевой диск</a>
-
-<table>
+<table id="content">
+    <colgroup>
+        <col style="width: 24px">
+        <col style="width: 2em">
+        <col style="width: 40%">
+        <col style="width: 50%">
+        <col style="width: 4em">
+    </colgroup>
 <%
 
     WebApplicationContext ac = WebApplicationContextUtils.getRequiredWebApplicationContext(application);
@@ -46,7 +55,8 @@
 %>
 
     <caption>Box <%=dir.getName()%></caption>
-    <tr><th></th><th>№</th><th>файл</th><th>комментарий</th><th>кеш</th></tr>
+    <label for="mf" id="mfdd"></label>
+    <tr class="table-header"><th></th><th>№</th><th>файл</th><th class="file-description">комментарий</th><th>кеш</th></tr>
     <!--jsp:useBean id="streamsBox" beanName="streamsBox" type="ru.timtish.bridge.box.StreamsBox"/-->
     <!-- todo: remove scriptlets -->
 
@@ -59,7 +69,7 @@
         %><tr>
             <td><input type="checkbox" id="<%=boxId%>" class="sf" /></td>
             <td class="<%=in != null ? "type-" + BoxUtil.contentTypeIcon(in.getContentType()) : ""%>" title="<%=in != null ? in.getContentType() : ""%>"><%=i++%></td>
-            <td><a href="<%=isFile ? "get?key=" + key : stream.getName() + "/" %>" <%if(isFile && StreamStatus.CLOSED.equals(in.getStatus())){%>style="color: gray;text-decoration: line-through;"<%}else if(newKeys.contains(key)){%>style="color: green;"<%}else{%>style="color: blue;"<%}%>><%=stream.getName()%></a></td>
+            <td><a href="<%=isFile ? "get?key=" + key : stream.getName() + File.separatorChar %>" <%if(isFile && StreamStatus.CLOSED.equals(in.getStatus())){%>style="color: gray;text-decoration: line-through;"<%}else if(newKeys.contains(key)){%>style="color: green;"<%}else{%>style="color: blue;"<%}%>><%=stream.getName()%></a></td>
             <td><%=stream.getDescription() == null ? "" : stream.getDescription()%></td>
             <td><%=(isFile && stream.getSize() != null && stream.getSize() > 0) ? in.getReaded() * 100 / stream.getSize() + " %" : "?"%></td>
         </tr><%
@@ -90,4 +100,5 @@
     });
 </script>
 </body>
+<script type="text/javascript" src="js/drop.js"></script>
 </html>

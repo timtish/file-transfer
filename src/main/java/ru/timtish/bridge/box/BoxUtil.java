@@ -22,7 +22,7 @@ public class BoxUtil {
 	public static String safeFileName(String fileName) {
 		if (fileName.contains("/")) fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
 		if (fileName.contains("\\")) fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
-		fileName = fileName.replace("\\W", "_");
+		fileName = fileName.replace("[\\W?%=]", "_");
 		return fileName;
 	}
 

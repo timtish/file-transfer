@@ -1,12 +1,12 @@
 label {
-    display: inline-block;
-    text-align: right;
-    vertical-align: top;
-    width: 17em;
+    display: block;
+    padding: 0px 8px;
+    font-size: small;
 }
 
 input, textarea {
-    width: 28em;
+    width: 99%;
+    margin: 0px 4px 4px 4px;
 }
 
 input[type=submit] {
@@ -21,3 +21,13 @@ input[type=submit]:active {
     margin: 5px 3px 3px 5px;
     box-shadow: 1px 0px 1px #443300;
 }
+
+
+form {
+    background: #f5f5dc;
+    padding: 6px;
+    display: block;
+    border: dotted 1px #deb887;
+}
+
+

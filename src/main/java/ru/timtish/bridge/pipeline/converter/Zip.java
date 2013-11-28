@@ -7,6 +7,7 @@ import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.cache.CachedInMemoryInputStream;
 import ru.timtish.bridge.pipeline.cache.RepeatableInputStream;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -75,12 +76,12 @@ public class Zip {
 	}
 
 	private static BoxEntity findFolderForFile(List<BoxEntity> list, String path) {
-		if (path.startsWith("/")) path = path.substring(1);
-		if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
+		if (path.startsWith(File.separator)) path = path.substring(1);
+		if (path.endsWith(File.separator)) path = path.substring(0, path.length() - 1);
 		String name;
-		if (path.contains("/")) {
-			name = path.substring(0, path.indexOf("/"));
-			path = path.substring(path.indexOf("/"));
+		if (path.contains(File.separator)) {
+			name = path.substring(0, path.indexOf(File.separatorChar));
+			path = path.substring(path.indexOf(File.separatorChar));
 		} else {
 			name = path;
 			path = "";

@@ -30,8 +30,7 @@ ru.timtish.bridge.loadFilesAsZip = function loadFilesAsZip(streamKeyList) {
     $.fileDownload("zip", {
         httpMethod: "POST",
         data: {
-            keys: streamKeyList.join(','),
-            box: "box.zip"
+            keys: streamKeyList.join(',')
         }
     })
 }
@@ -45,5 +44,5 @@ ru.timtish.bridge.sendToEmail = function loadFilesAsZip(streamKeyList, targetEma
             to: targetEmail
         }
     }).done(function(d) { alert("success " + d); })
-      .fail(function() { alert("error"); })
+      .fail(function(e) { alert("error " + e); })
 }

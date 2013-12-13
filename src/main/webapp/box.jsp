@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="box.css" />
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="js/bridge.js"></script>
+    <script type="text/javascript" src="js/comet.js"></script>
     <script type="text/javascript" src="js/jquery.fileDownload.js"></script>
 </head>
 <body id="mf">
@@ -33,8 +34,8 @@
         <col style="width: 24px">
         <col style="width: 2em">
         <col style="width: 40%">
-        <col style="width: 50%">
-        <col style="width: 4em">
+        <col style="width: 45%">
+        <col style="width: 5em">
     </colgroup>
 <%
 
@@ -76,8 +77,9 @@
     }
 %>
 </table>
-
-<script type="text/javascript">
+</body>
+<script type="text/javascript" src="js/drop.js"></script>
+<script type="text/javascript">$(function(){
     $('#selected-as-zip').on('click', function () {
         var sf = $('input:checked.sf');
         if (sf.length == 0) {
@@ -98,7 +100,7 @@
         for (var i = 0; i < sf.length; i++) streamKeyList.push(sf[i].id);
         ru.timtish.bridge.sendToEmail(streamKeyList, 'timtish@gmail.com');
     });
-</script>
-</body>
-<script type="text/javascript" src="js/drop.js"></script>
+
+    ru.timtish.comet.open("ws://localhost:8083/bridge/events");
+})</script>
 </html>

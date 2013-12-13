@@ -1,4 +1,9 @@
 
+caption {
+    margin: 0 20px;
+    text-align: left;
+}
+
 #content {
     padding: 8px;
     border-spacing: 0px;
@@ -10,6 +15,11 @@
     border: 1px dotted #deb887;
     border-bottom: 0;
     margin: 1px 3px;
+    color: #966;
+}
+
+td {
+    border-bottom: 1px dotted #deb887;
 }
 
 th.file-description {

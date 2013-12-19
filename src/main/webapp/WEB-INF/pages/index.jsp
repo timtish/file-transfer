@@ -1,18 +1,23 @@
 <!DOCTYPE HTML>
 <%@ page contentType="text/html;charset=UTF-8"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+
 <html>
 <head>
     <title>Add file</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="main.css" />
-    <link rel="stylesheet" type="text/css" href="index.css" />
+    <link rel="stylesheet" type="text/css" href="<s:url value='/css/main.css'/>" />
+    <link rel="stylesheet" type="text/css" href="<s:url value='/css/index.css'/>" />
     <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
-    <script src="js/jquery.MultiFile.js" type="text/javascript"></script>
-    <script src="js/bridge.js" type="text/javascript"></script>
+    <script src="<s:url value='/js/jquery.MultiFile.js'/>" type="text/javascript"></script>
+    <script src="<s:url value='/js/bridge.js'/>" type="text/javascript"></script>
 </head>
 <body>
 <div id="menu">
-    <a class="menu1" href="box.jsp">Все файлы</a>
+    <a class="menu1" href="box.html">Все файлы</a>
 </div>
 <form action="put_mp" method="post" enctype="multipart/form-data" accept-charset="UTF-8" id="mf">
     <label for="file1">Файл для зрагузки (можно перетащить в эту область)</label>
@@ -39,5 +44,5 @@
     <input type="submit" value="add text" />
 </form>
 </body>
-<script src="js/drop.js" type="text/javascript"></script>
+<script src="<s:url value='/js/drop.js'/>" type="text/javascript"></script>
 </html>

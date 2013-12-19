@@ -1,140 +1,83 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+    <display-name>File bridge</display-name>
 
-<web-app>
-  <display-name>File bridge</display-name>
+   <!--<context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>WEB-INF/context.xml</param-value>
+    </context-param>-->
 
-  <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>WEB-INF/context.xml</param-value>
-  </context-param>
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ignore</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </filter>
 
-  <filter>
-    <filter-name>characterEncodingFilter</filter-name>
-    <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
-    <init-param>
-      <param-name>encoding</param-name>
-      <param-value>UTF-8</param-value>
-    </init-param>
-    <init-param>
-      <param-name>ignore</param-name>
-      <param-value>false</param-value>
-    </init-param>
-  </filter>
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
 
-  <filter-mapping>
-    <filter-name>characterEncodingFilter</filter-name>
-    <url-pattern>*</url-pattern>
-  </filter-mapping>
+   <!-- <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+-->
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/context.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
-  <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-  </listener>
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>*.html</url-pattern>
+        <url-pattern>/put_mp</url-pattern>
+        <url-pattern>/put_st</url-pattern>
+        <url-pattern>/put_txt</url-pattern>
+        <url-pattern>/get_file</url-pattern>
+        <url-pattern>/get_zip</url-pattern>
+        <url-pattern>/get_big</url-pattern>
+    </servlet-mapping>
 
-  <servlet>
-    <servlet-name>multiPartServlet</servlet-name>
-    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>simpleFormServlet</servlet-name>
-    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>simpleStreamServlet</servlet-name>
-    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>urlStreamServlet</servlet-name>
-    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>zipExportServlet</servlet-name>
-    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>mailExportServlet</servlet-name>
-    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-  </servlet>
+    <!--
+    <servlet>
+      <servlet-name>webdav</servlet-name>
+      <servlet-class>ru.timtish.bridge.web.WebDavServlet</servlet-class>
+      <init-param>
+        <param-name>debug</param-name>
+        <param-value>0</param-value>
+      </init-param>
+      <init-param>
+        <param-name>listings</param-name>
+        <param-value>true</param-value>
+      </init-param>
+      <init-param>
+        <param-name>allowSpecialPaths</param-name>
+        <param-value>true</param-value>
+      </init-param>
+      <init-param>
+        <param-name>readonly</param-name>
+        <param-value>false</param-value>
+      </init-param>
+    </servlet>-->
 
-  <servlet>
-    <servlet-name>webdav</servlet-name>
-    <servlet-class>ru.timtish.bridge.web.WebDavServlet</servlet-class>
-    <init-param>
-      <param-name>debug</param-name>
-      <param-value>0</param-value>
-    </init-param>
-    <init-param>
-      <param-name>listings</param-name>
-      <param-value>true</param-value>
-    </init-param>
-    <init-param>
-      <param-name>allowSpecialPaths</param-name>
-      <param-value>true</param-value>
-    </init-param>
-    <init-param>
-      <param-name>readonly</param-name>
-      <param-value>false</param-value>
-    </init-param>
-  </servlet>
-
-  <!-- in connectors -->
-
-  <servlet-mapping>
-    <servlet-name>multiPartServlet</servlet-name>
-    <url-pattern>/put_mp</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>simpleFormServlet</servlet-name>
-    <url-pattern>/put_txt</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>simpleStreamServlet</servlet-name>
-    <url-pattern>/put_file</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>urlStreamServlet</servlet-name>
-    <url-pattern>/put_st</url-pattern>
-  </servlet-mapping>
-
-  <!-- out connectors -->
-
-  <servlet-mapping>
-    <servlet-name>simpleStreamServlet</servlet-name>
-    <url-pattern>/get</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>zipExportServlet</servlet-name>
-    <url-pattern>/zip</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>mailExportServlet</servlet-name>
-    <url-pattern>/mail</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>webdav</servlet-name>
-    <url-pattern>/webdav/*</url-pattern>
-  </servlet-mapping>
-
-  <!-- test stream -->
-
-  <servlet-mapping>
-    <servlet-name>urlStreamServlet</servlet-name>
-    <url-pattern>/big</url-pattern>
-  </servlet-mapping>
-
-
-  <welcome-file-list>
-    <welcome-file>/index.jsp</welcome-file>
-  </welcome-file-list>
+    <welcome-file-list>
+        <welcome-file>/index.html</welcome-file>
+    </welcome-file-list>
 
 </web-app>

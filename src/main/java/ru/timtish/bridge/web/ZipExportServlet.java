@@ -1,8 +1,9 @@
 package ru.timtish.bridge.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.HttpRequestHandler;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.timtish.bridge.box.BoxEntity;
 import ru.timtish.bridge.box.BoxFile;
 import ru.timtish.bridge.box.StreamsBox;
@@ -25,13 +26,13 @@ import java.util.zip.ZipOutputStream;
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-@Component("zipExportServlet")
-public class ZipExportServlet implements HttpRequestHandler {
+@Controller
+public class ZipExportServlet {
 
 	@Autowired
 	private StreamsBox streamsBox;
 
-	@Override
+    @RequestMapping(value = "/get_zip", method = RequestMethod.GET)
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> fileNameList;
 		String keys = request.getParameter(UrlConstants.PARAM_KEYS);

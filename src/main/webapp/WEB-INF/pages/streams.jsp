@@ -11,7 +11,7 @@
 <head>
     <title>Streams</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="main.css" />
+    <link rel="stylesheet" type="text/css" href="../css/main.css" />
 </head>
 <body>
 <table>
@@ -29,7 +29,7 @@
         AbstractStream stream = box.getStream(key);
         %><tr>
             <td><%=i++%></td>
-            <td><a href="get?key=<%=key%>" <%if(newKeys.contains(key)){%>style="color: green;"<%}else{%>style="color: #00008b;"<%}%>><%=stream.getName()%></a></td>
+            <td><a href="get_file?key=<%=key%>" <%if(newKeys.contains(key)){%>style="color: green;"<%}else{%>style="color: #00008b;"<%}%>><%=stream.getName()%></a></td>
             <td><%=stream.getDescription()%></td>
             <td><%=(stream.getSize() != null && stream.getSize() > 0) ? stream.getReaded() * 100 / stream.getSize() + " %" : "?"%></td>
         </tr><%

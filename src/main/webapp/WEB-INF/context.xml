@@ -5,80 +5,82 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                             http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                             http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
                              http://www.springframework.org/schema/jdbc
-                             http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+                             http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
                              http://www.springframework.org/schema/tx
-                             http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+                             http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
                              http://www.springframework.org/schema/aop
-                             http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                             http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
                              http://www.springframework.org/schema/context
-                             http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+                             http://www.springframework.org/schema/context/spring-context-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+  <mvc:annotation-driven/>
+  <context:annotation-config/>
   <context:component-scan base-package="ru.timtish.bridge" />
-  <context:annotation-config />
 
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="host" value="localhost"/>
   </bean>
 
-  <bean id="mailserver" class="org.apache.james.JamesMailServer"/>
+  <!--<bean id="mailserver" class="org.apache.james.JamesMailServer"/>
 
-  <bean id="pop3server"  class="org.apache.james.pop3server.netty.POP3Server" >
-    <property name="protocolHandlerChain" ref="pop3ProtocolHandlerChain"/>
-  </bean>
+    <bean id="pop3server"  class="org.apache.james.pop3server.netty.POP3Server" >
+      <property name="protocolHandlerChain" ref="pop3ProtocolHandlerChain"/>
+    </bean>
 
-  <bean id="pop3ProtocolHandlerChain" class="org.apache.james.socket.JamesProtocolHandlerChain">
-    <property name="coreHandlersPackage" value="org.apache.james.pop3server.core.CoreCmdHandlerLoader"/>
-  </bean>
+    <bean id="pop3ProtocolHandlerChain" class="org.apache.james.socket.JamesProtocolHandlerChain">
+      <property name="coreHandlersPackage" value="org.apache.james.pop3server.core.CoreCmdHandlerLoader"/>
+    </bean>
 
-  <bean id="smtpserver" class="org.apache.james.smtpserver.netty.SMTPServer">
-    <property name="protocolHandlerChain" ref="smtpProtocolHandlerChain"/>
-  </bean>
+    <bean id="smtpserver" class="org.apache.james.smtpserver.netty.SMTPServer">
+      <property name="protocolHandlerChain" ref="smtpProtocolHandlerChain"/>
+    </bean>
 
-  <bean id="smtpProtocolHandlerChain" class="org.apache.james.socket.JamesProtocolHandlerChain">
-    <property name="coreHandlersPackage" value="org.apache.james.smtpserver.CoreCmdHandlerLoader"/>
-  </bean>
+    <bean id="smtpProtocolHandlerChain" class="org.apache.james.socket.JamesProtocolHandlerChain">
+      <property name="coreHandlersPackage" value="org.apache.james.smtpserver.CoreCmdHandlerLoader"/>
+    </bean>
 
-  <bean id="mailQueueFactory" class="ru.timtish.bridge.services.jamescontext.MemoryMailQueueFactory" />
+    <bean id="mailQueueFactory" class="ru.timtish.bridge.services.jamescontext.MemoryMailQueueFactory" />
 
-  <bean class="ru.timtish.bridge.services.jamescontext.JamesBeanPostProcessor"/>
+    <bean class="ru.timtish.bridge.services.jamescontext.JamesBeanPostProcessor"/>
 
-  <bean id="dnsservice" class="org.apache.james.dnsservice.dnsjava.DNSJavaService" />
+    <bean id="dnsservice" class="org.apache.james.dnsservice.dnsjava.DNSJavaService" />
 
-  <bean id="domainlist" class="org.apache.james.domainlist.xml.XMLDomainList" />
+    <bean id="domainlist" class="org.apache.james.domainlist.xml.XMLDomainList" />
 
-  <bean id="imapserver" class="org.apache.james.imapserver.netty.IMAPServer">
-    <property name="imapDecoder" ref="imapDecoder"/>
-    <property name="imapEncoder" ref="imapEncoder"/>
-  </bean>
+    <bean id="imapserver" class="org.apache.james.imapserver.netty.IMAPServer">
+      <property name="imapDecoder" ref="imapDecoder"/>
+      <property name="imapEncoder" ref="imapEncoder"/>
+    </bean>
 
-  <bean id="imapDecoderFactory" class="org.apache.james.imap.main.DefaultImapDecoderFactory"/>
+    <bean id="imapDecoderFactory" class="org.apache.james.imap.main.DefaultImapDecoderFactory"/>
 
-  <bean id="imapDecoder" factory-bean="imapDecoderFactory"  factory-method="buildImapDecoder"/>
+    <bean id="imapDecoder" factory-bean="imapDecoderFactory"  factory-method="buildImapDecoder"/>
 
-  <bean id="imapEncoderFactory" class="org.apache.james.imap.encode.main.DefaultImapEncoderFactory"/>
+    <bean id="imapEncoderFactory" class="org.apache.james.imap.encode.main.DefaultImapEncoderFactory"/>
 
-  <bean id="imapEncoder" factory-bean="imapEncoderFactory"  factory-method="buildImapEncoder"/>
+    <bean id="imapEncoder" factory-bean="imapEncoderFactory"  factory-method="buildImapEncoder"/>
 
-  <bean id ="subscriptionManager" class="ru.timtish.bridge.services.mailstorage.MemoryMailSubscriptionManager" />
+    <bean id ="subscriptionManager" class="ru.timtish.bridge.services.mailstorage.MemoryMailSubscriptionManager" />
 
-  <bean id="imapProcessor" class="org.apache.james.imap.processor.main.DefaultImapProcessorFactory" factory-method="createDefaultProcessor">
-    <constructor-arg index="0" ref="mailboxmanager"/>
-    <constructor-arg index="1" ref="subscriptionManager"/>
-  </bean>
+    <bean id="imapProcessor" class="org.apache.james.imap.processor.main.DefaultImapProcessorFactory" factory-method="createDefaultProcessor">
+      <constructor-arg index="0" ref="mailboxmanager"/>
+      <constructor-arg index="1" ref="subscriptionManager"/>
+    </bean>
 
-  <bean id="instanceFactory" class="ru.timtish.bridge.services.jamescontext.SpringInstanceFactory"/>
+    <bean id="instanceFactory" class="ru.timtish.bridge.services.jamescontext.SpringInstanceFactory"/>
 
-  <bean class="ru.timtish.bridge.services.jamescontext.SpringConfigurationProvider"/>
+    <bean class="ru.timtish.bridge.services.jamescontext.SpringConfigurationProvider"/>
 
-  <bean id="filesystem" class="ru.timtish.bridge.services.jamescontext.SpringFileSystem" />
+    <bean id="filesystem" class="ru.timtish.bridge.services.jamescontext.SpringFileSystem" />
 
-  <bean id="mailboxmanager" class="ru.timtish.bridge.services.mailstorage.MemoryMailboxManager" />
+    <bean id="mailboxmanager" class="ru.timtish.bridge.services.mailstorage.MemoryMailboxManager" />
 
-  <bean id="localusersrepository" class="ru.timtish.bridge.services.mailstorage.MemoryMailUsersRepository" />
-
+    <bean id="localusersrepository" class="ru.timtish.bridge.services.mailstorage.MemoryMailUsersRepository" />
+  -->
 
 <!--
   <bean id="processormanagement" class="org.apache.james.mailetcontainer.lib.ProcessorManagement"/>

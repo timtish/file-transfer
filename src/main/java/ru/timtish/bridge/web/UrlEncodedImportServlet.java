@@ -1,32 +1,32 @@
 package ru.timtish.bridge.web;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.UUID;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.HttpRequestHandler;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.web.util.UrlConstants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.UUID;
+
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-@Component("simpleFormServlet")
-public class UrlEncodedImportServlet implements HttpRequestHandler {
+@Controller
+public class UrlEncodedImportServlet {
 
 	@Autowired
 	private StreamsBox streamsBox;
 
-	@Override
+	@RequestMapping(value = "/pit_txt", method = RequestMethod.POST)
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String data = request.getParameter("data");
 		if (data != null) {
@@ -41,7 +41,7 @@ public class UrlEncodedImportServlet implements HttpRequestHandler {
 			streamsBox.addStreams(key, stream);
 			new Thread(new CacheInitializer(stream)).start();
 
-			response.sendRedirect("box.jsp?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);
+			response.sendRedirect("box.html?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);
 		} else {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Data not found in request");
 		}

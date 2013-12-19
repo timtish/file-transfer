@@ -1,20 +1,21 @@
 package ru.timtish.bridge.web;
 
-import java.util.Hashtable;
+import org.apache.catalina.servlets.WebdavServlet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import ru.timtish.bridge.box.StreamsBox;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-
-import org.apache.catalina.servlets.WebdavServlet;
-import org.apache.naming.resources.ProxyDirContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-import ru.timtish.bridge.box.StreamsBox;
-import ru.timtish.bridge.web.util.DirectoryContext;
+import java.util.Hashtable;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
+@Controller
+@RequestMapping("/webdav")
 public class WebDavServlet extends WebdavServlet {
 
 	@Autowired
@@ -25,9 +26,9 @@ public class WebDavServlet extends WebdavServlet {
 		super.init(config);
 		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
 		Hashtable<String, String> env = new Hashtable<String, String>();
-		env.put(ProxyDirContext.HOST, this.getServletContext().getServerInfo());
-		env.put(ProxyDirContext.CONTEXT, "box");
-		resources = new ProxyDirContext(env, new DirectoryContext(streamsBox.getRoot()));
+		//env.put(ProxyDirContext.HOST, this.getServletContext().getServerInfo());
+		//env.put(ProxyDirContext.CONTEXT, "box");
+		// todo: resources.setContext(new ProxyDirContext(env, new DirectoryContext(streamsBox.getRoot())));
 	}
 
 }

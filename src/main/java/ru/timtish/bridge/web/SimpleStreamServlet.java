@@ -1,9 +1,12 @@
 package ru.timtish.bridge.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.HttpRequestHandler;
-import ru.timtish.bridge.box.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import ru.timtish.bridge.box.BoxUtil;
+import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.web.util.UrlConstants;
@@ -14,27 +17,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.UUID;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-@Component("simpleStreamServlet")
-public class SimpleStreamServlet implements HttpRequestHandler {
+@Controller
+public class SimpleStreamServlet {
 
 	@Autowired
 	private StreamsBox streamsBox;
 
-	@Override
-	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ("get".equalsIgnoreCase(request.getMethod())) {
-			doGet(request, response);
-		} else {
-			doPost(request, response);
-		}
-	}
-
-	protected void doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @RequestMapping(value = "/put_file", method = RequestMethod.POST)
+	protected ModelAndView doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String key = UUID.randomUUID().toString();
 		AbstractStream stream = new AbstractStream(request.getInputStream(), request.getContentLength(),
 				BoxUtil.safeFileName(request.getHeader("X-FILE-NAME")), request.getRemoteUser(), null);
@@ -44,13 +40,16 @@ public class SimpleStreamServlet implements HttpRequestHandler {
 		streamsBox.addStreams(key, stream);
 
 		response.getOutputStream().write(key.getBytes());
+        return new ModelAndView("/index.jsp", Collections.singletonMap("key", key));
 	}
 
-
+    @RequestMapping(value = "/get_file", method = RequestMethod.GET)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String key = request.getParameter(UrlConstants.PARAM_KEY);
 
 		// todo: check permissions
+        //String sslID = (String)request.getAttribute("javax.servlet.request.ssl_session");
+
 
         /*BoxEntity box = BoxUtil.findById(key);
         AbstractStream stream = null;

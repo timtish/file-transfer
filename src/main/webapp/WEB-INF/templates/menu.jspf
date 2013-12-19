@@ -1,0 +1,8 @@
+<%@ page contentType="text/html;charset=UTF-8"%>
+<div id="menu">
+    <a class="menu1" href="index.html">Добавить файл</a>
+    <button id="selected-as-zip">Загрузить архивом</button>
+    <button id="send-to-email">Отправить почтой</button>
+    <button id="new-box">Объединить в новый пакет</button>
+    <a href="webdav">Подключить как сетевой диск</a>
+</div>

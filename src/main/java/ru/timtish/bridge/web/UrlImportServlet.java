@@ -1,29 +1,29 @@
 package ru.timtish.bridge.web;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.UUID;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.HttpRequestHandler;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.web.util.UrlConstants;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.UUID;
+import java.util.logging.Logger;
+
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-@Component("urlStreamServlet")
-public class UrlImportServlet implements HttpRequestHandler {
+@Controller
+public class UrlImportServlet {
 
 	private static final Logger LOG = Logger.getLogger(UrlImportServlet.class.getName());
 
@@ -35,15 +35,7 @@ public class UrlImportServlet implements HttpRequestHandler {
 	@Autowired
 	private StreamsBox streamsBox;
 
-	@Override
-	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ("get".equalsIgnoreCase(request.getMethod())) {
-			doGet(request, response);
-		} else {
-			doPost(request, response);
-		}
-	}
-
+    @RequestMapping(value = "/put_st", method = RequestMethod.POST)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String url = request.getParameter(PARAM_URL);
 		String description = request.getParameter(PARAM_DESCRIPTION);
@@ -62,9 +54,10 @@ public class UrlImportServlet implements HttpRequestHandler {
 		streamsBox.addStreams(key, stream);
 		new Thread(new CacheInitializer(stream)).start();
 
-		response.sendRedirect("box.jsp?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);
+		response.sendRedirect("box.html?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);
 	}
 
+    @RequestMapping(value = "/get_big", method = RequestMethod.GET)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentLength(BIG_LENGTH);
 		for (int i = 0; i < BIG_LENGTH; i++) {

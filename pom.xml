@@ -61,17 +61,7 @@
             <version>${spring-version}</version>
         </dependency>
 
-        <!-- mail server -->
-        <!--<dependency>
-            <groupId>org.apache.james</groupId>
-            <artifactId>james-server-container-spring</artifactId>
-            <version>3.0-M2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.james</groupId>
-            <artifactId>apache-james-mailbox-api</artifactId>
-            <version>0.5</version>
-        </dependency>-->
+        <!-- mail -->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
@@ -85,12 +75,12 @@
             <version>${tomcat-version}</version>
             <scope>provided</scope>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-catalina</artifactId>
             <version>${tomcat-version}</version>
             <scope>provided</scope>
-        </dependency>-->
+        </dependency>
 
         <!-- test -->
         <dependency>

@@ -26,7 +26,7 @@ public class UrlEncodedImportServlet {
 	@Autowired
 	private StreamsBox streamsBox;
 
-	@RequestMapping(value = "/pit_txt", method = RequestMethod.POST)
+	@RequestMapping(value = "/put_txt", method = RequestMethod.POST)
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String data = request.getParameter("data");
 		if (data != null) {

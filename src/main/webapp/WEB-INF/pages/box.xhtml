@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<head>
+    <title>${msg.title}</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="css/box.css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="js/bridge.js"></script>
+    <script type="text/javascript" src="js/comet.js"></script>
+    <script type="text/javascript" src="js/jquery.fileDownload.js"></script>
+    <h:outputScript library="js" name="comet.js"/>
+    <h:outputStylesheet library="css" name="main.css"/>
+</head>
+<h:body id="mf">
+    <div id="menu" xmlns="http://www.w3.org/1999/xhtml"
+         xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+        <a class="menu1" href="index.html">${msg.selectFile}</a>
+        <button id="selected-as-zip">${msg.loadAsZip}</button>
+        <button id="send-to-email">${msg.sendByEmail}</button>
+        <button id="new-box">${msg.newBox}</button>
+        <a href="webdav">${msg.webdav}</a>
+        <ui:insert name="button"/>
+    </div>
+    <h:form>
+    <label for="mf" id="mfdd"></label>
+    <table id="content">
+        <colgroup>
+            <col style="width: 24px"/>
+            <col style="width: 2em"/>
+            <col style="width: 40%"/>
+            <col style="width: 45%"/>
+            <col style="width: 5em"/>
+        </colgroup>
+        <caption>#{msg.box} #{box.name}</caption>
+        <tr class="table-header">
+            <th>
+                <h:commandButton value="" title="refresh table" styleClass="btn-refresh-table">
+                    <f:ajax render="@all"/>
+                </h:commandButton></th>
+            <th>№</th>
+            <th>файл</th>
+            <th class="file-description">комментарий</th>
+            <th>кеш</th>
+        </tr>
+        <ui:repeat var="file" value="${box.files}" varStatus="status"><tr>
+            <td><input type="checkbox" id="${file.key}" class="sf" /></td>
+            <td class="type-${file.contentTypeIcon}" title="${file.contentType}">${status.index+1}</td>
+            <td><a href="file?key=${file.key}" style="color: gray;text-decoration: none;">${file.name}</a></td>
+            <td>#{file.description}</td>
+            <td>#{file.cachePercent} %</td>
+        </tr></ui:repeat>
+    </table>
+    </h:form>
+</h:body>
+<script type="text/javascript" src="js/drop.js"></script>
+<script type="text/javascript" src="js/box.js"></script>
+<script type="text/javascript">$(function(){
+    ru.timtish.comet.open("ws://#{request.serverName}:#{request.serverPort}#{request.contextPath}/events");
+})</script>
+</html>

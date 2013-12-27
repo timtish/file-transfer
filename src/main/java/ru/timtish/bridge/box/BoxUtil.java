@@ -1,7 +1,5 @@
 package ru.timtish.bridge.box;
 
-import ru.timtish.bridge.pipeline.AbstractStream;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +24,7 @@ public class BoxUtil {
 		return fileName;
 	}
 
-	public static String contentTypeIcon(String contentType) {
+	public static String getContentTypeIcon(String contentType) {
 		if (contentType == null) return "bin";
 		if (contentType.startsWith("text")) return "txt";
 		if (contentType.startsWith("image")) return "img";
@@ -48,11 +46,4 @@ public class BoxUtil {
 	public static void addBox(String id, BoxDirectory dir) {
 		dirs.put(id, dir);
 	}
-
-    public static String findStreamKey(StreamsBox streamsBox, AbstractStream stream) {
-        for (String key : streamsBox.getKeys()) { // todo: save key to AbstractStream
-            if (streamsBox.getStream(key).equals(stream)) return key;
-        }
-        return null;
-    }
 }

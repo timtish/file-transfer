@@ -15,30 +15,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
 @Controller
+@RequestMapping(value = "/txt")
 public class UrlEncodedImportServlet {
+
+    private static final Logger LOG = Logger.getLogger(UrlImportServlet.class.getName());
+    private static final int BIG_LENGTH = 1 * 1024 * 1024;
 
 	@Autowired
 	private StreamsBox streamsBox;
 
-	@RequestMapping(value = "/put_txt", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String data = request.getParameter("data");
 		if (data != null) {
 			byte[] buffer = data.getBytes();
-			String key = UUID.randomUUID().toString();
 			String name = request.getParameter("name");
 			if (name == null || name.trim().isEmpty()) name = "txt";
 			name = BoxUtil.safeFileName(name);
 			AbstractStream stream = new AbstractStream(new ByteArrayInputStream(buffer), buffer.length, name, request.getRemoteUser(), request.getParameter("description"));
 			stream.setRepeatable(buffer.length < 1024 * 1024);
 			stream.setContentType("text/plan");
-			streamsBox.addStreams(key, stream);
+			String key = streamsBox.addStreams(stream);
 			new Thread(new CacheInitializer(stream)).start();
 
 			response.sendRedirect("box.html?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);
@@ -46,5 +49,27 @@ public class UrlEncodedImportServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Data not found in request");
 		}
 	}
+
+
+
+    @RequestMapping(method = RequestMethod.GET)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentLength(BIG_LENGTH);
+        for (int i = 0; i < BIG_LENGTH; i++) {
+            try {
+                response.getOutputStream().write(i);
+                if (i % 1024 == 0) LOG.finest("big> " + i);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ServletException(e);
+            }
+            if (i % 1024 == 0) try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        LOG.finest("big> finish");
+    }
 
 }

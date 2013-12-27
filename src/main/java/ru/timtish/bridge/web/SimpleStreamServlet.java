@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
@@ -18,32 +18,34 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Collections;
-import java.util.UUID;
+import java.util.Map;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
 @Controller
+@RequestMapping(value = "/file")
 public class SimpleStreamServlet {
 
 	@Autowired
 	private StreamsBox streamsBox;
 
-    @RequestMapping(value = "/put_file", method = RequestMethod.POST)
-	protected ModelAndView doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String key = UUID.randomUUID().toString();
+    @RequestMapping(method = RequestMethod.POST)
+	protected @ResponseBody Map<String, String> doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		AbstractStream stream = new AbstractStream(request.getInputStream(), request.getContentLength(),
 				BoxUtil.safeFileName(request.getHeader("X-FILE-NAME")), request.getRemoteUser(), null);
 		stream.setContentType(request.getContentType());
 		stream.setRepeatable(stream.getSize() < 1024 * 1024);
 		new CacheInitializer(stream).run();
-		streamsBox.addStreams(key, stream);
+        String key = streamsBox.addStreams(stream);
 
-		response.getOutputStream().write(key.getBytes());
-        return new ModelAndView("/index.jsp", Collections.singletonMap("key", key));
+        return Collections.singletonMap("key: ", key);
+
+		//response.getOutputStream().write(key.getBytes());
+        //return new ModelAndView("/index.xhtml", Collections.singletonMap("key", key));
 	}
 
-    @RequestMapping(value = "/get_file", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String key = request.getParameter(UrlConstants.PARAM_KEY);
 
@@ -79,7 +81,7 @@ public class SimpleStreamServlet {
 		response.getOutputStream().close();
 
 		if (!stream.isRepeatable()) {
-			streamsBox.release(BoxUtil.findStreamKey(streamsBox, stream));
+			streamsBox.release(stream.getId());
 		}
 	}
 }

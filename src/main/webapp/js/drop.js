@@ -49,7 +49,7 @@ ru.timtish.DropZone = function (dropZone, dropInfo) {
             var xhr = new XMLHttpRequest();
             xhr.upload.addEventListener('progress', uploadProgress, false);
             xhr.onreadystatechange = stateChange;
-            xhr.open('POST', 'put_file');
+            xhr.open('POST', 'file');
             xhr.setRequestHeader('X-FILE-NAME', file.name);
             var date = file.lastModifiedDate;
             if (date) {

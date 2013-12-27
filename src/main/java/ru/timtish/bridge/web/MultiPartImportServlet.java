@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -62,13 +61,12 @@ public class MultiPartImportServlet {
 
 			for (FileItem file : items) {
 				if (!file.isFormField()) {
-					String key = UUID.randomUUID().toString();
 					long size = file.getSize();
 					AbstractStream stream = new AbstractStream(file.getInputStream(), size >= 0 ? size : null,
 							BoxUtil.safeFileName(file.getName()), request.getRemoteUser(), description);
 					stream.setRepeatable(stream.getSize() < 100 * 1024 * 1024); // todo: from runtime settings
 					stream.setContentType(file.getContentType());
-					streamsBox.addStreams(key, stream);
+					String key = streamsBox.addStreams(stream);
 					if (file.isInMemory()) {
 						new Thread(new CacheInitializer(stream)).start();
 					}

@@ -1,6 +1,7 @@
 package ru.timtish.bridge.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,10 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -25,12 +22,8 @@ import java.util.logging.Logger;
 @Controller
 public class UrlImportServlet {
 
-	private static final Logger LOG = Logger.getLogger(UrlImportServlet.class.getName());
-
 	private static final String PARAM_URL = "url";
 	private static final String PARAM_DESCRIPTION = "description";
-
-	private static final int BIG_LENGTH = 1 * 1024 * 1024;
 
 	@Autowired
 	private StreamsBox streamsBox;
@@ -44,37 +37,14 @@ public class UrlImportServlet {
 			return;
 		}
 
-		URL source = new URL(url);
-		URLConnection connection = source.openConnection();
-		String key = UUID.randomUUID().toString();
-		AbstractStream stream = new AbstractStream(connection.getInputStream(), connection.getContentLength(), BoxUtil.safeFileName(url), request.getRemoteUser(), description);
+        UrlResource res = new UrlResource(url);
+		AbstractStream stream = new AbstractStream(res, res.contentLength(), BoxUtil.safeFileName(url), request.getRemoteUser(), description);
 		stream.setRepeatable(stream.getSize() < 1024 * 1024);
-		stream.setContentType(connection.getContentType());
 
-		streamsBox.addStreams(key, stream);
+        String key = streamsBox.addStreams(stream);
 		new Thread(new CacheInitializer(stream)).start();
 
 		response.sendRedirect("box.html?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);
-	}
-
-    @RequestMapping(value = "/get_big", method = RequestMethod.GET)
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentLength(BIG_LENGTH);
-		for (int i = 0; i < BIG_LENGTH; i++) {
-			try {
-				response.getOutputStream().write(i);
-				if (i % 1024 == 0) LOG.finest("big> " + i);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new ServletException(e);
-			}
-			if (i % 1024 == 0) try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		LOG.finest("big> finish");
 	}
 
 }

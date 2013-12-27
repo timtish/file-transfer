@@ -29,7 +29,6 @@ public class Box {
     public ModelAndView index(@RequestParam(value = UrlConstants.PARAM_BOX, required = false) String box,
                               @RequestParam(value = UrlConstants.PARAM_BOX_PATH, required = false) String path,
                               @RequestParam(value = UrlConstants.PARAM_NEW_KEYS, required = false) String newKeyList /* todo: Set<String>*/) {
-        System.out.println("!");
 
         String user = ""; // todo: request.getRemoteUser();
         Set<String> newKeys = new HashSet<String>();
@@ -40,7 +39,7 @@ public class Box {
         BoxEntity dir = BoxUtil.getBoxEntity(user, box, path);
         if (dir == null) dir = streamsBox.getRoot();
 
-        return new ModelAndView("WEB-INF/pages/box.jsp", Collections.singletonMap("box", new ru.timtish.bridge.web.beans.Box(dir)));
+        return new ModelAndView("WEB-INF/pages/box.xhtml", Collections.singletonMap("box", new ru.timtish.bridge.web.beans.Box(dir)));
     }
 
 }

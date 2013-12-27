@@ -1,5 +1,7 @@
 package ru.timtish.bridge.pipeline.cache;
 
+import ru.timtish.bridge.pipeline.LoseStreamHead;
+
 import java.io.*;
 
 /**
@@ -23,7 +25,7 @@ public class CachedInTempFileInputStream extends AutoClosableInputStream impleme
 			if ( b >= 0) {
 				if (out == null) {
 					if (!isNew) {
-						throw new IllegalStateException("Input stream already read, but not saved to cache");
+						throw new LoseStreamHead("Input stream already read, but not saved to cache");
 					}
 					cache = File.createTempFile("CachedInTempFileInputStream", "");
 					out = new FileOutputStream(cache);

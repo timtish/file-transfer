@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:sf="http://www.springframework.org/tags/form"
+      xmlns:s="http://www.springframework.org/tags">
+<h:head>
+    <title>Add file</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery.MultiFile.js" type="text/javascript"></script>
+    <script src="js/bridge.js" type="text/javascript"></script>
+    <h:outputStylesheet value="../../css/main.css"/>
+    <h:outputScript name="js/drop.js" library="js" target="body"/>
+</h:head>
+<body>
+<div id="menu">
+    <a class="menu1" href="box.html">Все файлы</a>
+</div>
+<form action="put_mp" method="post" enctype="multipart/form-data" accept-charset="UTF-8" id="mf">
+    <label for="file1">Файл для зрагузки (можно перетащить в эту область)</label>
+    <input type="file" id="file1" name="file" multiple="" required=""/><br/>
+    <label for="description1">Комментарий</label>
+    <input type="text" id="description1" name="description" size="30"/><br/>
+    <input type="submit" value="add file from folder"/>
+    <label for="mf" id="mfdd"></label>
+</form>
+<form action="put_st" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">
+    <label for="description2">Комментарий</label>
+    <input type="text" id="description2" name="description" size="30"/><br/>
+    <label for="url">Адрес</label>
+    <input type="text" id="url" name="url" size="40" required=""/><br/>
+    <input type="submit" value="add file from url"/>
+</form>
+<form action="put_txt" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">
+    <label for="name">Название</label>
+    <input type="text" id="name" name="name" size="30"/><br/>
+    <label for="description3">Комментарий</label>
+    <input type="text" id="description3" name="description" size="30"/><br/>
+    <label for="data">Текст</label>
+    <textarea name="data" id="data" rows="6" cols="40" required=""></textarea><br/><!-- todo: auto resize -->
+    <input type="submit" value="add text"/>
+</form>
+<script src="js/drop.js" type="text/javascript"></script>
+</body>
+</html>

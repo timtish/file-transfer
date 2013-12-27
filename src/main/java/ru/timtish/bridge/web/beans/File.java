@@ -22,28 +22,27 @@ public class File {
     }
 
     public String getKey() {
-        return ""; // todo: isFile ? BoxUtil.findStreamKey(streamsBox, ((BoxFile) stream).getInputStream()) : null;
+        return !isFile ? stream.getName() : ((BoxFile) stream).getInputStream().getId();
     }
-
-    public String getId() {
-        return stream.getName();
-    }
-
-    public String getAddress() {
-        return stream.getName();
-    }
-
 
     public String getDescription() {
         return stream.getDescription();
     }
 
-
     public String getSize() {
         return stream.getSize() + " b";
     }
 
-    public String getBoxId() {
-        return BoxUtil.getId(stream);
+    public int getCachePercent() {
+        return !isFile || ((BoxFile) stream).getSize() == null ? 0:
+                (int) (100 * ((BoxFile) stream).getInputStream().getReaded() / stream.getSize());
+    }
+
+    public String getContentType() {
+        return !isFile ? null : ((BoxFile) stream).getInputStream().getContentType();
+    }
+
+    public String getContentTypeIcon() {
+        return BoxUtil.getContentTypeIcon(getContentType());
     }
 }

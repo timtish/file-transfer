@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Collections;
-import java.util.UUID;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -31,16 +30,15 @@ public class SimpleStreamServlet {
 
     @RequestMapping(value = "/put_file", method = RequestMethod.POST)
 	protected ModelAndView doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String key = UUID.randomUUID().toString();
 		AbstractStream stream = new AbstractStream(request.getInputStream(), request.getContentLength(),
 				BoxUtil.safeFileName(request.getHeader("X-FILE-NAME")), request.getRemoteUser(), null);
 		stream.setContentType(request.getContentType());
 		stream.setRepeatable(stream.getSize() < 1024 * 1024);
 		new CacheInitializer(stream).run();
-		streamsBox.addStreams(key, stream);
+        String key = streamsBox.addStreams(stream);
 
 		response.getOutputStream().write(key.getBytes());
-        return new ModelAndView("/index.jsp", Collections.singletonMap("key", key));
+        return new ModelAndView("/index.xhtml", Collections.singletonMap("key", key));
 	}
 
     @RequestMapping(value = "/get_file", method = RequestMethod.GET)
@@ -79,7 +77,7 @@ public class SimpleStreamServlet {
 		response.getOutputStream().close();
 
 		if (!stream.isRepeatable()) {
-			streamsBox.release(BoxUtil.findStreamKey(streamsBox, stream));
+			streamsBox.release(stream.getId());
 		}
 	}
 }

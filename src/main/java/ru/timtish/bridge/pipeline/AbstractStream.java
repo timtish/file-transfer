@@ -1,16 +1,18 @@
 package ru.timtish.bridge.pipeline;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.logging.Logger;
-
+import org.springframework.core.io.InputStreamSource;
 import ru.timtish.bridge.box.StreamStatus;
 import ru.timtish.bridge.pipeline.cache.AutoClosableInputStream;
 import ru.timtish.bridge.pipeline.cache.CachedInMemoryInputStream;
 import ru.timtish.bridge.pipeline.cache.CachedInTempFileInputStream;
 import ru.timtish.bridge.pipeline.cache.RepeatableInputStream;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -19,6 +21,8 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 
 	private static final Logger LOG = Logger.getLogger(AbstractStream.class.getName());
 
+    String id;
+
 	String owner;
 
 	String name;
@@ -26,6 +30,9 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 	String description;
 
 	String contentType;
+
+    InputStreamSource source;
+    Long sourceSize;
 
 	AutoClosableInputStream in;
 
@@ -46,7 +53,17 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 	}
 
 	public AbstractStream(InputStream in, Long size, String name, String owner, String description) {
-		this.in = new AutoClosableInputStream(in, size);
+        id = UUID.randomUUID().toString();
+        this.in = new AutoClosableInputStream(in, size);
+		this.name = name;
+		this.owner = owner;
+		this.description = description;
+	}
+
+	public AbstractStream(InputStreamSource source, Long size, String name, String owner, String description) {
+        id = UUID.randomUUID().toString();
+		this.source = source;
+        this.sourceSize = size;
 		this.name = name;
 		this.owner = owner;
 		this.description = description;
@@ -77,7 +94,7 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 			cache = null;
 		}
 		try {
-			in.close();
+			if (in != null) in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -93,9 +110,9 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 	private RepeatableInputStream createCacheStream() {
 		Long size = getSize();
 		if (size != null && size < 1 * 1024 * 1024) {
-			return new CachedInMemoryInputStream(in, size);
+			return new CachedInMemoryInputStream(getIn(), size);
 		} else {
-			return new CachedInTempFileInputStream(in, size);
+			return new CachedInTempFileInputStream(getIn(), size);
 		}
 	}
 
@@ -107,10 +124,19 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 			}
 			return cache.createCopy();
 		} else {
-			if (!in.isNew()) {
-				throw new IllegalStateException("Input stream already read, lose " + in.getReaded() + " bytes");
+			if (in != null && !in.isNew()) {
+                if (source != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    in = null; // for reinit in getIn();
+                } else {
+				    throw new LoseStreamHead("Input stream already read, lose " + in.getReaded() + " bytes");
+                }
 			}
-			return in;
+			return getIn();
 		}
 	}
 
@@ -158,9 +184,9 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 		this.repeatable = repeatable;
 	}
 
-	public Long getSize() {
-		return in.getSize();
-	}
+    public Long getSize() {
+        return in == null ? sourceSize : getIn().getSize();
+    }
 
 	public Date getLastRequest() {
 		return lastRequest;
@@ -187,7 +213,9 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 	}
 
 	public StreamStatus getStatus() {
-		if (in.isCompleted()) {
+        if (in == null) {
+            return StreamStatus.NEW;
+        } else if (in.isCompleted()) {
 			if (cache instanceof CachedInMemoryInputStream) return StreamStatus.BUFFERED_TO_MEMORY;
 			if (cache instanceof CachedInTempFileInputStream) return StreamStatus.BUFFERED_TO_FILE;
 			return StreamStatus.CLOSED;
@@ -197,6 +225,26 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 	}
 
 	public long getReaded() {
-		return in.getReaded();
+		return in == null ? 0 : in.getReaded();
 	}
+
+    public AutoClosableInputStream getIn() {
+        if (in == null && source != null) {
+            try {
+                in = new AutoClosableInputStream(source.getInputStream(), sourceSize);
+            } catch (IOException e) {
+                // todo: add exception graph
+                e.printStackTrace();
+            }
+        }
+        return in;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

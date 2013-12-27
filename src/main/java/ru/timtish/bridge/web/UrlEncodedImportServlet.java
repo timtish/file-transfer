@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -31,14 +30,13 @@ public class UrlEncodedImportServlet {
 		String data = request.getParameter("data");
 		if (data != null) {
 			byte[] buffer = data.getBytes();
-			String key = UUID.randomUUID().toString();
 			String name = request.getParameter("name");
 			if (name == null || name.trim().isEmpty()) name = "txt";
 			name = BoxUtil.safeFileName(name);
 			AbstractStream stream = new AbstractStream(new ByteArrayInputStream(buffer), buffer.length, name, request.getRemoteUser(), request.getParameter("description"));
 			stream.setRepeatable(buffer.length < 1024 * 1024);
 			stream.setContentType("text/plan");
-			streamsBox.addStreams(key, stream);
+			String key = streamsBox.addStreams(stream);
 			new Thread(new CacheInitializer(stream)).start();
 
 			response.sendRedirect("box.html?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);

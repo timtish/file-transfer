@@ -5,13 +5,12 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
-import ru.timtish.bridge.pipeline.AbstractStream;
-import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.web.util.UrlConstants;
 
 import javax.servlet.ServletException;
@@ -19,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+
+import static ru.timtish.bridge.pipeline.cache.CacheInitializer.CacheType.IN_NEW_THREAD;
+import static ru.timtish.bridge.pipeline.cache.CacheInitializer.CacheType.OFF;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -62,14 +64,9 @@ public class MultiPartImportServlet {
 			for (FileItem file : items) {
 				if (!file.isFormField()) {
 					long size = file.getSize();
-					AbstractStream stream = new AbstractStream(file.getInputStream(), size >= 0 ? size : null,
-							BoxUtil.safeFileName(file.getName()), request.getRemoteUser(), description);
-					stream.setRepeatable(stream.getSize() < 100 * 1024 * 1024); // todo: from runtime settings
-					stream.setContentType(file.getContentType());
-					String key = streamsBox.addStreams(stream);
-					if (file.isInMemory()) {
-						new Thread(new CacheInitializer(stream)).start();
-					}
+					String key = BoxUtil.wrapStream(streamsBox, new InputStreamResource(file.getInputStream()),
+                            size >= 0 ? size : null, file.getName(), file.getContentType(), request.getRemoteUser(),
+                            description, file.isInMemory() ? IN_NEW_THREAD : OFF);
 					if (!newKeys.isEmpty()) newKeys +=",";
 					newKeys += key;
 				}

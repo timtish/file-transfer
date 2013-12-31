@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
-import ru.timtish.bridge.pipeline.AbstractStream;
 import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.web.util.UrlConstants;
 
@@ -38,12 +37,7 @@ public class UrlImportServlet {
 		}
 
         UrlResource res = new UrlResource(url);
-		AbstractStream stream = new AbstractStream(res, res.contentLength(), BoxUtil.safeFileName(url), request.getRemoteUser(), description);
-		stream.setRepeatable(stream.getSize() < 1024 * 1024);
-
-        String key = streamsBox.addStreams(stream);
-		new Thread(new CacheInitializer(stream)).start();
-
+        String key = BoxUtil.wrapStream(streamsBox, res, null, url, null, request.getRemoteUser(),                description, CacheInitializer.CacheType.IN_NEW_THREAD);
 		response.sendRedirect("box.html?" + UrlConstants.PARAM_NEW_KEYS + "=" + key);
 	}
 

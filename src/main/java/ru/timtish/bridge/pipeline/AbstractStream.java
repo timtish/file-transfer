@@ -48,18 +48,6 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 
 	int requestsCount;
 
-	public AbstractStream(InputStream in, Integer size, String name, String owner, String description) {
-		this(in, size == null ? null : 0L + size, name, owner, description);
-	}
-
-	public AbstractStream(InputStream in, Long size, String name, String owner, String description) {
-        id = UUID.randomUUID().toString();
-        this.in = new AutoClosableInputStream(in, size);
-		this.name = name;
-		this.owner = owner;
-		this.description = description;
-	}
-
 	public AbstractStream(InputStreamSource source, Long size, String name, String owner, String description) {
         id = UUID.randomUUID().toString();
 		this.source = source;

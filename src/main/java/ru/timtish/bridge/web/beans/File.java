@@ -34,7 +34,7 @@ public class File {
     }
 
     public int getCachePercent() {
-        return !isFile || ((BoxFile) stream).getSize() == null ? 0:
+        return !isFile || stream.getSize() == null || stream.getSize() < 1 ? 0:
                 (int) (100 * ((BoxFile) stream).getInputStream().getReaded() / stream.getSize());
     }
 

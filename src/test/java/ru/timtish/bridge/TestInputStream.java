@@ -1,12 +1,14 @@
 package ru.timtish.bridge;
 
+import org.springframework.core.io.InputStreamSource;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public class TestInputStream extends InputStream {
+public class TestInputStream extends InputStream implements InputStreamSource {
 
 	long i;
 
@@ -29,4 +31,9 @@ public class TestInputStream extends InputStream {
 	public synchronized void reset() throws IOException {
 		i = 0;
 	}
+
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return this;
+    }
 }

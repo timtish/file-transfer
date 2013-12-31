@@ -1,6 +1,7 @@
 package ru.timtish.bridge.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.timtish.bridge.box.BoxUtil;
 import ru.timtish.bridge.box.StreamsBox;
 import ru.timtish.bridge.pipeline.AbstractStream;
-import ru.timtish.bridge.pipeline.cache.CacheInitializer;
 import ru.timtish.bridge.web.util.UrlConstants;
 
 import javax.servlet.ServletException;
@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Map;
+
+import static ru.timtish.bridge.pipeline.cache.CacheInitializer.CacheType.FULL;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
@@ -32,17 +34,10 @@ public class SimpleStreamServlet {
 
     @RequestMapping(method = RequestMethod.POST)
 	protected @ResponseBody Map<String, String> doPost(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		AbstractStream stream = new AbstractStream(request.getInputStream(), request.getContentLength(),
-				BoxUtil.safeFileName(request.getHeader("X-FILE-NAME")), request.getRemoteUser(), null);
-		stream.setContentType(request.getContentType());
-		stream.setRepeatable(stream.getSize() < 1024 * 1024);
-		new CacheInitializer(stream).run();
-        String key = streamsBox.addStreams(stream);
-
+        String key = BoxUtil.wrapStream(streamsBox, new InputStreamResource(request.getInputStream()),
+                (long) request.getContentLength(), request.getHeader("X-FILE-NAME"), request.getContentType(),
+                request.getRemoteUser(), null, FULL);
         return Collections.singletonMap("key: ", key);
-
-		//response.getOutputStream().write(key.getBytes());
-        //return new ModelAndView("/index.xhtml", Collections.singletonMap("key", key));
 	}
 
     @RequestMapping(method = RequestMethod.GET)

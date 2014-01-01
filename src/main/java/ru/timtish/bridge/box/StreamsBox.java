@@ -52,16 +52,51 @@ public class StreamsBox {
 		if (stream != null) {
 			stream.clear();
 			streams.remove(key);
-			// todo: root.getChilds().remove()
+			removeFileByStream(root, key);
 			LOG.fine("stream " + stream.getName() + " removed");
 		}
 	}
 
-	public Collection<String> getKeys() {
+    private void removeFileByStream(BoxDirectory dir, String key) {
+        for (BoxEntity e : dir.getChilds()) {
+            if (e instanceof BoxDirectory) removeFileByStream((BoxDirectory) e, key); else
+            if (e instanceof BoxFile && key.equals(((BoxFile)e).getInputStream().getId())) {
+                dir.getChilds().remove(e);
+                return;
+            } else
+            if (e instanceof BoxZipFile && key.equals(((BoxZipFile)e).getInputStream().getId())) {
+                dir.getChilds().remove(e);
+                return;
+            }
+
+        }
+    }
+
+    public Collection<String> getKeys() {
 		return streams.keySet();
 	}
 
 	public BoxDirectory getRoot() {
 		return root;
 	}
+
+    public void initRoot(BoxDirectory root) {
+        this.root = root;
+        addDir(root);
+    }
+
+    private void addDir(BoxDirectory dir) {
+        for (BoxEntity e : dir.getChilds()) {
+            if (e instanceof BoxDirectory) addDir((BoxDirectory) e); else
+            if (e instanceof BoxFile) addStream(((BoxFile) e).getInputStream()); else
+            if (e instanceof BoxZipFile) addStream(((BoxZipFile) e).getInputStream());
+
+        }
+    }
+
+    private void addStream(AbstractStream stream) {
+        LOG.fine("stream " + stream.getName() + " loaded");
+        String key = stream.getId();
+        this.streams.put(key, stream);
+    }
 }

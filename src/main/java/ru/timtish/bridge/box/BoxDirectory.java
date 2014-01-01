@@ -26,7 +26,10 @@ public class BoxDirectory implements BoxEntity {
 
 	private BoxEntity parent;
 
-	public BoxDirectory(String name, Date date, List<BoxEntity> childs, BoxEntity parent) {
+    public BoxDirectory() {
+    }
+
+    public BoxDirectory(String name, Date date, List<BoxEntity> childs, BoxEntity parent) {
 		this.name = name;
 		this.date = date;
 		this.childs = childs;

@@ -56,5 +56,20 @@ ru.timtish.bridge = {
             .fail(function (e) {
                 this.alert("error " + e);
             })
+    },
+
+    removeFiles: function (streamKeyList) {
+        $.ajax("file", {
+            type: "DELETE",
+            data: {
+                keys: streamKeyList.join(',')
+            }
+        })
+            .done(function (d) {
+                this.alert("success " + d);
+            })
+            .fail(function (e) {
+                this.alert("error " + e);
+            })
     }
 }

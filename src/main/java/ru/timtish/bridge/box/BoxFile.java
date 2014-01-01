@@ -18,13 +18,16 @@ public class BoxFile implements BoxEntity {
 
 	private BoxEntity parent;
 
-	transient private AbstractStream in;
+    private AbstractStream in;
 
-	transient Boolean isContainer;
+	private Boolean isContainer;
 
-	transient List<BoxEntity> childs = Collections.emptyList();
+	private List<BoxEntity> childs = Collections.emptyList();
 
-	public BoxFile(AbstractStream stream, BoxEntity parent) {
+    public BoxFile() {
+    }
+
+    public BoxFile(AbstractStream stream, BoxEntity parent) {
 		this.in = stream;
 		this.parent = parent;
 	}

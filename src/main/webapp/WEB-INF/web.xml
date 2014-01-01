@@ -4,6 +4,18 @@
 
     <display-name>File bridge</display-name>
 
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/context.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>ru.timtish.bridge.services.ReloadApplicationResourcesSaver</listener-class>
+    </listener>
+
     <filter>
         <filter-name>characterEncodingFilter</filter-name>
         <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
@@ -22,12 +34,12 @@
         <url-pattern>*</url-pattern>
     </filter-mapping>
 
-    <servlet>
+   <servlet>
         <servlet-name>springmvc</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/context.xml</param-value>
+            <param-value>/WEB-INF/web-context.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -43,7 +55,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <servlet-mapping>
+   <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
         <url-pattern>*.html</url-pattern>
         <url-pattern>/file</url-pattern>
@@ -51,6 +63,7 @@
         <url-pattern>/put_st</url-pattern>
         <url-pattern>/txt</url-pattern>
         <url-pattern>/get_zip</url-pattern>
+        <url-pattern>/resources/**</url-pattern>
     </servlet-mapping>
 
 

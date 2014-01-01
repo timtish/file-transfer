@@ -2,13 +2,14 @@ package ru.timtish.bridge.box;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public interface BoxEntity {
+public interface BoxEntity extends Serializable {
 
 	/**
 	 * @return имя объекта (без пути к нему)

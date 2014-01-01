@@ -13,8 +13,6 @@
     <script type="text/javascript" src="js/bridge.js"></script>
     <script type="text/javascript" src="js/comet.js"></script>
     <script type="text/javascript" src="js/jquery.fileDownload.js"></script>
-    <h:outputScript library="js" name="comet.js"/>
-    <h:outputStylesheet library="css" name="main.css"/>
 </head>
 <h:body id="mf">
     <div id="menu" xmlns="http://www.w3.org/1999/xhtml"
@@ -23,6 +21,7 @@
         <button id="selected-as-zip">${msg.loadAsZip}</button>
         <button id="send-to-email">${msg.sendByEmail}</button>
         <button id="new-box">${msg.newBox}</button>
+        <button id="remove-selected">${msg.removeFile}</button>
         <a href="webdav">${msg.webdav}</a>
         <ui:insert name="button"/>
     </div>

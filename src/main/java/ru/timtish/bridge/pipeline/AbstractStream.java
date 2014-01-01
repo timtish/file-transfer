@@ -10,6 +10,7 @@ import ru.timtish.bridge.pipeline.cache.RepeatableInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public class AbstractStream implements PipelineResource, RepeatableInputStream {
+public class AbstractStream implements PipelineResource, RepeatableInputStream, Serializable {
 
 	private static final Logger LOG = Logger.getLogger(AbstractStream.class.getName());
 
@@ -31,7 +32,7 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream {
 
 	String contentType;
 
-    InputStreamSource source;
+    transient InputStreamSource source; //todo: serialize repeatable resources
     Long sourceSize;
 
 	AutoClosableInputStream in;

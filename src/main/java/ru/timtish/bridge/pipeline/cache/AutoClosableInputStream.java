@@ -2,15 +2,16 @@ package ru.timtish.bridge.pipeline.cache;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * @author Timofey Tishin (ttishin@luxoft.com)
  */
-public class AutoClosableInputStream extends InputStream {
+public class AutoClosableInputStream extends InputStream implements Serializable {
 
 	private Long readed;
 	private Long size;
-	private InputStream in;
+	private transient InputStream in;
 
 	public AutoClosableInputStream(InputStream in, Long size) {
 		this.in = in;

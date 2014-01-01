@@ -22,9 +22,12 @@ public class BoxZipFile implements BoxEntity {
 	private String name;
 	private Long size;
 
-	transient private AbstractStream in;
+	private AbstractStream in;
 
-	public BoxZipFile(AbstractStream stream, String zipFilePath, Long size, BoxEntity parent) {
+    public BoxZipFile() {
+    }
+
+    public BoxZipFile(AbstractStream stream, String zipFilePath, Long size, BoxEntity parent) {
 		this.parent = parent;
 		this.size = size;
 		this.in = stream;

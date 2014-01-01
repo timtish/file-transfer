@@ -35,6 +35,11 @@
             <artifactId>im4java</artifactId>
             <version>1.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <!-- jsp features -->
         <dependency>
@@ -104,6 +109,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <finalName>bridge</finalName>
     </build>

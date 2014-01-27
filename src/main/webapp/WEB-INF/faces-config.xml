@@ -11,4 +11,8 @@
         </resource-bundle>
     </application>
 
+    <variable-resolver>
+        org.springframework.web.jsf.DelegatingVariableResolver
+    </variable-resolver>
+
 </faces-config>

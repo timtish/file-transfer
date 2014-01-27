@@ -58,6 +58,15 @@ public class AbstractStream implements PipelineResource, RepeatableInputStream, 
 		this.description = description;
 	}
 
+	public AbstractStream(InputStreamSource source, Long size, String name, String owner, String description) {
+        id = UUID.randomUUID().toString();
+		this.source = source;
+        this.sourceSize = size;
+		this.name = name;
+		this.owner = owner;
+		this.description = description;
+	}
+
 	@Override
 	public synchronized void write(OutputStream out) throws IOException {
 		lastRequest = new Date();

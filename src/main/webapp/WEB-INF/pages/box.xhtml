@@ -13,6 +13,8 @@
     <script type="text/javascript" src="js/bridge.js"></script>
     <script type="text/javascript" src="js/comet.js"></script>
     <script type="text/javascript" src="js/jquery.fileDownload.js"></script>
+    <h:outputScript library="js" name="comet.js"/>
+    <h:outputStylesheet library="css" name="main.css"/>
 </head>
 <h:body id="mf">
     <div id="menu" xmlns="http://www.w3.org/1999/xhtml"
@@ -21,12 +23,13 @@
         <button id="selected-as-zip">${msg.loadAsZip}</button>
         <button id="send-to-email">${msg.sendByEmail}</button>
         <button id="new-box">${msg.newBox}</button>
-        <button id="remove-selected">${msg.removeFile}</button>
         <a href="webdav">${msg.webdav}</a>
         <ui:insert name="button"/>
+        <h:commandButton value="refresh">
+            <f:ajax render=":content"/>
+        </h:commandButton>
     </div>
     <h:form>
-    <label for="mf" id="mfdd"></label>
     <table id="content">
         <colgroup>
             <col style="width: 24px"/>
@@ -36,11 +39,9 @@
             <col style="width: 5em"/>
         </colgroup>
         <caption>#{msg.box} #{box.name}</caption>
+        <label for="mf" id="mfdd"></label>
         <tr class="table-header">
-            <th>
-                <h:commandButton value="" title="refresh table" styleClass="btn-refresh-table">
-                    <f:ajax render="@all"/>
-                </h:commandButton></th>
+            <th></th>
             <th>№</th>
             <th>файл</th>
             <th class="file-description">комментарий</th>
@@ -49,14 +50,14 @@
         <ui:repeat var="file" value="${box.files}" varStatus="status"><tr>
             <td><input type="checkbox" id="${file.key}" class="sf" /></td>
             <td class="type-${file.contentTypeIcon}" title="${file.contentType}">${status.index+1}</td>
-            <td><a href="file?key=${file.key}" style="color: gray;text-decoration: none;">${file.name}</a></td>
+            <td><a href="get_file?key=${file.key}" style="color: gray;text-decoration: none;">${file.name}</a></td>
             <td>#{file.description}</td>
             <td>#{file.cachePercent} %</td>
         </tr></ui:repeat>
     </table>
     </h:form>
 </h:body>
-<script type="text/javascript" src="js/drop.js"></script>
+<script type="text/javascript" src="#{resource['js:drop.js']}"></script>
 <script type="text/javascript" src="js/box.js"></script>
 <script type="text/javascript">$(function(){
     ru.timtish.comet.open("ws://#{request.serverName}:#{request.serverPort}#{request.contextPath}/events");

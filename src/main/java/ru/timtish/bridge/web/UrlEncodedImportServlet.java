@@ -33,6 +33,7 @@ public class UrlEncodedImportServlet {
 	@RequestMapping(method = RequestMethod.POST)
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String data = request.getParameter("data");
+
 		if (data == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Data not found in request");
             return;
